@@ -20,12 +20,13 @@
   </properties>
 
 	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.11</version>
-			<scope>test</scope>
-		</dependency>
+
+	<dependency>
+		<groupId>org.junit.jupiter</groupId>
+		<artifactId>junit-jupiter-engine</artifactId>
+		<version>5.8.1</version>
+		<scope>test</scope>
+	</dependency>
 
 		<!-- https://mvnrepository.com/artifact/javax.servlet/servlet-api -->
 		<dependency>
@@ -34,6 +35,12 @@
 			<version>2.5</version>
 			<scope>provided</scope>
 		</dependency>
+
+	<!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
+
+	<!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-chrome-driver -->
+
+	<!-- https://mvnrepository.com/artifact/io.github.bonigarcia/webdrivermanager -->
 
 
 	</dependencies>
@@ -55,10 +62,25 @@
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.8.0</version>
         </plugin>
+<!--         <plugin> -->
+<!--           <artifactId>maven-surefire-plugin</artifactId> -->
+<!--           <version>2.22.1</version> -->
+<!--         </plugin> -->
+
         <plugin>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.22.1</version>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>3.0.0-M5</version>
+<!--             <dependencies> -->
+<!--                 <dependency> -->
+<!--                     <groupId>org.junit.jupiter</groupId> -->
+<!--                     <artifactId>junit-jupiter-engine</artifactId> -->
+<!--                     <version>5.3.2</version> -->
+<!--                 </dependency> -->
+<!--             </dependencies> -->
         </plugin>
+        
+        
         <plugin>
           <artifactId>maven-war-plugin</artifactId>
           <version>3.2.2</version>
