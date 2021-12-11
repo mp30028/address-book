@@ -6,20 +6,22 @@ import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
 
+import com.zonesoft.addressbook.properties.ApplicationProperties;
 
 
-public class AddressBookConnection {
-	private static final Logger LOGGER =  Logger.getLogger(AddressBookConnection.class);
-	private final Properties properties;
+
+public class DbConnection {
+	private static final Logger LOGGER =  Logger.getLogger(DbConnection.class);
+	private final ApplicationProperties properties;
 
 	
-	public AddressBookConnection(Properties properties) {
+	public DbConnection(ApplicationProperties properties) {
 		this.properties = properties;
 	}
 	
 	public Connection getConnection() {
 		try {
-			String connectionString = "jdbc:mysql://" + properties.getHost() + ":" + Integer.toString(properties.getPort()) + "/" + properties.getDatabase();
+			String connectionString = "jdbc:mysql://" + properties.getHost() + ":" + Integer.toString(properties.getPort()) + "/" + properties.getSchema();
 			LOGGER.debug("FROM getConnection: connectionString = " + connectionString);
 			return openConnection(connectionString, this.properties.getUsername(), this.properties.getPassword());
 		} catch (Exception e) {
