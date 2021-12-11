@@ -8,7 +8,7 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
-import static com.zonesoft.addressbook.constants.ApplicationConstants.APPLICATION_PROPERTIES_FILE;
+import static com.zonesoft.addressbook.constants.ApplicationConstants.*;
 
 public class ApplicationProperties {
 	private static final Logger LOGGER = Logger.getLogger(ApplicationProperties.class);
@@ -28,10 +28,10 @@ public class ApplicationProperties {
 		InputStream input = null;
 		input = openPropertiesFile(filename);
 		properties.load(input);
-		LOGGER.info("address-book.db.host = " + properties.getProperty("address-book.db.host"));
-		LOGGER.info("address-book.db.port = " + properties.getProperty("address-book.db.port"));
-		LOGGER.info("address-book.db.schema = " + properties.getProperty("address-book.db.schema"));
-		LOGGER.info("address-book.db.driver = " + properties.getProperty("address-book.db.driver"));
+		LOGGER.info(DB_HOST + " = " + properties.getProperty(DB_HOST));
+		LOGGER.info(DB_PORT + " = " + properties.getProperty(DB_PORT));
+		LOGGER.info(DB_SCHEMA + " = " + properties.getProperty(DB_SCHEMA));
+		LOGGER.info(DB_DRIVER + " = " + properties.getProperty(DB_DRIVER));
 		input.close();
 	}
 
@@ -47,26 +47,26 @@ public class ApplicationProperties {
 	}
 
 	public String getJdbcDriver() {
-		return properties.getProperty("address-book.db.driver");
+		return properties.getProperty(DB_DRIVER);
 	}
 
 	public String getHost() {
-		return properties.getProperty("address-book.db.host");
+		return properties.getProperty(DB_HOST);
 	}
 
 	public int getPort() {
-		return Integer.parseInt(properties.getProperty("address-book.db.port"));
+		return Integer.parseInt(properties.getProperty(DB_PORT));
 	}
 
 	public String getUsername() {
-		return properties.getProperty("address-book.db.username");
+		return properties.getProperty(DB_USERNAME);
 	}
 
 	public String getPassword() {
-		return properties.getProperty("address-book.db.password");
+		return properties.getProperty(DB_PASSWORD);
 	}
 
 	public String getSchema() {
-		return properties.getProperty("address-book.db.schema");
+		return properties.getProperty(DB_SCHEMA);
 	}
 }
