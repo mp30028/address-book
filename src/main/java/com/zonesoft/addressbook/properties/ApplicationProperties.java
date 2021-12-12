@@ -14,14 +14,24 @@ public class ApplicationProperties {
 	private static final Logger LOGGER = Logger.getLogger(ApplicationProperties.class);
 	private final Properties properties = new Properties();
 
-	public ApplicationProperties() throws IOException, FileNotFoundException {
+	public ApplicationProperties()  {
 		super();
-		loadProperties(APPLICATION_PROPERTIES_FILE);
+		try {
+			loadProperties(APPLICATION_PROPERTIES_FILE);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
-	public ApplicationProperties(String filename) throws IOException, FileNotFoundException {
+	public ApplicationProperties(String filename) {
 		super();
-		loadProperties(filename);
+		try {
+			loadProperties(filename);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private void loadProperties(String filename) throws IOException, FileNotFoundException {

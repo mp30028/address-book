@@ -15,13 +15,13 @@ import org.mockito.Mockito;
 
 import com.zonesoft.addressbook.properties.ApplicationProperties;
 
-class DbConnectionTest {
+class ConnectionManagerTest {
 
 	@Test
 	void testGetConnection_WHEN_propertiesFileInClasspath_THEN_returnsDbConnection()
 			throws SQLException, ClassNotFoundException, FileNotFoundException, IOException {
 		ApplicationProperties properties = new ApplicationProperties();
-		DbConnection spyAddressBookConnection = Mockito.spy(new DbConnection(properties));
+		ConnectionManager spyAddressBookConnection = Mockito.spy(new ConnectionManager(properties));
 		Connection mockConnection = Mockito.mock(Connection.class);
 		assertNotNull(properties);
 		assertNotNull(spyAddressBookConnection);
