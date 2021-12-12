@@ -8,6 +8,8 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
+import com.zonesoft.addressbook.exceptions.AddressBookException;
+
 import static com.zonesoft.addressbook.constants.ApplicationConstants.*;
 
 public class ApplicationProperties {
@@ -16,42 +18,48 @@ public class ApplicationProperties {
 
 	public ApplicationProperties()  {
 		super();
-		try {
-			loadProperties(APPLICATION_PROPERTIES_FILE);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		loadProperties(APPLICATION_PROPERTIES_FILE);
 	}
 
 	public ApplicationProperties(String filename) {
 		super();
+		loadProperties(filename);
+	}
+
+	private void loadProperties(String filename) {
+		InputStream input = null;
 		try {
-			loadProperties(filename);
+			input = openPropertiesFile(filename);
+			properties.load(input);
+			LOGGER.info(DB_HOST + " = " + properties.getProperty(DB_HOST));
+			LOGGER.info(DB_PORT + " = " + properties.getProperty(DB_PORT));
+			LOGGER.info(DB_SCHEMA + " = " + properties.getProperty(DB_SCHEMA));
+			LOGGER.info(DB_DRIVER + " = " + properties.getProperty(DB_DRIVER));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			String message = "Failed to load data from inputstream opened on file " + filename;
+			LOGGER.error(message);
 			e.printStackTrace();
+			throw new AddressBookException(message, e);
+		} finally {
+			try {
+				if (Objects.nonNull(input)) input.close();
+			} catch (IOException e) {
+				String message = "Failed to close inputstream opened on file " + filename;
+				LOGGER.error(message);
+				e.printStackTrace();
+			}
 		}
 	}
 
-	private void loadProperties(String filename) throws IOException, FileNotFoundException {
-		InputStream input = null;
-		input = openPropertiesFile(filename);
-		properties.load(input);
-		LOGGER.info(DB_HOST + " = " + properties.getProperty(DB_HOST));
-		LOGGER.info(DB_PORT + " = " + properties.getProperty(DB_PORT));
-		LOGGER.info(DB_SCHEMA + " = " + properties.getProperty(DB_SCHEMA));
-		LOGGER.info(DB_DRIVER + " = " + properties.getProperty(DB_DRIVER));
-		input.close();
-	}
-
-	private InputStream openPropertiesFile(String propertiesFilename) throws FileNotFoundException {
+	private InputStream openPropertiesFile(String propertiesFilename) {
 		InputStream inputStream = ApplicationProperties.class.getClassLoader().getResourceAsStream(propertiesFilename);
 		if (Objects.isNull(inputStream)) {
 			String fileNotFoundErrorMessage = "Error trying to read " + propertiesFilename
 					+ ". Check this file is in the classpath";
 			LOGGER.error(fileNotFoundErrorMessage);
-			throw new FileNotFoundException(fileNotFoundErrorMessage);
+			FileNotFoundException exception = new FileNotFoundException(fileNotFoundErrorMessage);
+			exception.printStackTrace();
+			throw new AddressBookException(exception);
 		}
 		return inputStream;
 	}

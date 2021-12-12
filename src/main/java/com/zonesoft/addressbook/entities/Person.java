@@ -3,11 +3,14 @@ package com.zonesoft.addressbook.entities;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Person {
+	private static final Logger LOGGER = Logger.getLogger(Person.class);
 	private long personId;
 	private String firstname;
 	private String lastname;
@@ -62,9 +65,10 @@ public class Person {
 		try {
 			json = objectMapper.writeValueAsString(this);
 		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return null;
+			String message = "<EXCEPTION - whilst writing Person Object to JSON. " + e.getLocalizedMessage() + ">" ;
+			LOGGER.error(message);
+			return message;
 		}
 		return json;
 	}

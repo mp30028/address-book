@@ -1,10 +1,8 @@
 package com.zonesoft.addressbook.utils;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zonesoft.addressbook.entities.Person;
+import java.util.Objects;
 
 public class Utils {
 	
@@ -12,5 +10,32 @@ public class Utils {
 		return LocalDate.parse(dateAsString);
 	}
 	
+	public static String sqlExceptionAsString(SQLException ex) {
+		StringBuffer sb = null;
+		for (Throwable e : ex) {
+			if (e instanceof SQLException) {
+				if (Objects.isNull(sb)) sb = new StringBuffer();
+				
+				sb.append("SQLState: ");
+				sb.append(((SQLException) e).getSQLState());
+				sb.append("\n");
 
+				sb.append("Error Code: ");
+				sb.append(((SQLException) e).getErrorCode());
+				sb.append("\n");
+				
+				sb.append("Message: ");
+				sb.append(e.getMessage());
+				sb.append("\n");
+				
+				Throwable t = ex.getCause();
+				while (t != null) {
+					sb.append("Cause: ");
+					sb.append(t);
+					t = t.getCause();
+				}
+			}
+		}
+		return sb.toString();
+	}
 }

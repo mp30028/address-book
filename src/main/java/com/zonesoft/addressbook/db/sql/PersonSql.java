@@ -1,4 +1,4 @@
-package com.zonesoft.addressbook.dao.sql;
+package com.zonesoft.addressbook.db.sql;
 
 public class PersonSql {
 	public static final String FIELD_PERSON_ID = "person_id";

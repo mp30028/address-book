@@ -6,6 +6,8 @@ import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
 
+import com.zonesoft.addressbook.exceptions.AddressBookException;
+
 class ApplicationPropertiesTest {
 
 	@Test
@@ -25,9 +27,9 @@ class ApplicationPropertiesTest {
 	}
 
 	@Test
-	void testAppProps_WHEN_propertiesFileNotFound_THEN_throwsFileNotFoundException() {
+	void testAppProps_WHEN_propertiesFileNotFound_THEN_throwsAddressBookException() {
 		String nonExistentFile = "thisfiledoesnotexist.properties";
-		assertThrows(FileNotFoundException.class, () -> new ApplicationProperties(nonExistentFile));
+		assertThrows(AddressBookException.class, () -> new ApplicationProperties(nonExistentFile));
 	}
 
 }

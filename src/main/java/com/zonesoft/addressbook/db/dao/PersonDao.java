@@ -1,5 +1,6 @@
-package com.zonesoft.addressbook.dao;
+package com.zonesoft.addressbook.db.dao;
 
+import java.net.ConnectException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,15 +10,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import org.apache.log4j.Logger;
+
 import com.zonesoft.addressbook.db.ConnectionManager;
 import com.zonesoft.addressbook.entities.OtherName;
 import com.zonesoft.addressbook.entities.OtherNameType;
 import com.zonesoft.addressbook.entities.Person;
-import static com.zonesoft.addressbook.dao.sql.PersonSql.*;
-import static com.zonesoft.addressbook.utils.Utils.convertToLocalDate;
+import com.zonesoft.addressbook.exceptions.AddressBookException;
+
+import static com.zonesoft.addressbook.db.sql.PersonSql.*;
+import static com.zonesoft.addressbook.utils.Utils.*;
 
 public class PersonDao {
-
+	private static final Logger LOGGER = Logger.getLogger(PersonDao.class);
 	private static  ConnectionManager connectionManager;
 	
 	public PersonDao(ConnectionManager connectionManager) {
@@ -32,6 +37,12 @@ public class PersonDao {
 	
 	public List<Person> fetchAll(){
 		Connection connection = PersonDao.connectionManager.getConnection();
+		if (Objects.isNull(connection)) {
+			String message = "Connection to database was null. Could not proceed with fetchAll request";
+			ConnectException exception = new ConnectException(message);
+			LOGGER.error(message);
+			throw new AddressBookException(exception);
+		}
 		List<Person> persons = null;
 		try {
 			Statement statement = connection.createStatement();
@@ -50,13 +61,18 @@ public class PersonDao {
 				persons.add(person);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			String message = "SQL Exception trying to execute SQL=" + GET_ALL_SQL;
+			LOGGER.error(message);
+			LOGGER.error(sqlExceptionAsString(e));
 			e.printStackTrace();
-		}finally {	
+			throw new AddressBookException(message, e);
+		}finally {
 			try {
-				connection.close();
+				if (Objects.nonNull(connection)) connection.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
+				String message = "Failed to close connection to db" ;
+				LOGGER.error(message);
+				LOGGER.error(sqlExceptionAsString(e));
 				e.printStackTrace();
 			}
 		}
