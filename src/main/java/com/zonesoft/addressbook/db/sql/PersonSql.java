@@ -9,6 +9,7 @@ public class PersonSql {
 	public static final String FIELD_OTHER_NAME = "other_name";
 	public static final String FIELD_OTHER_NAME_TYPE_ID = "other_name_type_id";
 	public static final String FIELD_OTHER_NAME_TYPE = "other_name_type";
+	public static final String FIELD_GENDER = "gender";
 	public static final int PARAMETER_PERSON_ID_FOR_OTHER_NAMES_SQL = 1;
 	
 	public static final String GET_ALL_SQL = 

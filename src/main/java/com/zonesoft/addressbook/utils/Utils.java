@@ -15,6 +15,7 @@ public class Utils {
 		for (Throwable e : ex) {
 			if (e instanceof SQLException) {
 				if (Objects.isNull(sb)) sb = new StringBuffer();
+				sb.append("\n");
 				
 				sb.append("SQLState: ");
 				sb.append(((SQLException) e).getSQLState());

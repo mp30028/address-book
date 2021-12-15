@@ -1,5 +1,7 @@
 package com.zonesoft.addressbook.db;
 
+import static com.zonesoft.addressbook.utils.Utils.sqlExceptionAsString;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -35,10 +37,18 @@ public class ConnectionManager {
 			connection = DriverManager.getConnection(connectionUrl, username, password);
 		} catch (ClassNotFoundException e) {
 			String message = "Failed to initialise JDBC driver class=" + properties.getJdbcDriver();
+			LOGGER.error(message);
 			e.printStackTrace();
 			throw new AddressBookException(message, e);
 		} catch (SQLException e) {
 			String message = "Failed to open connection for connection url=" + connectionUrl + ". Validate the Url and also check the credentials are valid for username=" + username;
+			LOGGER.error(message);
+			LOGGER.error(sqlExceptionAsString(e));
+			e.printStackTrace();
+			throw new AddressBookException(message, e);
+		} catch(Exception e) {
+			String message= "An unexpected Exception occurred trying to open connection with url=" + connectionUrl + ", for username=" + username;
+			LOGGER.error(message);
 			e.printStackTrace();
 			throw new AddressBookException(message, e);
 		}
