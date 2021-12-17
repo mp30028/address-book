@@ -52,11 +52,16 @@ public class PersonDao {
 				long id = resultset.getLong(FIELD_PERSON_ID);
 				
 				Person person = new Person();
-				person.sePersonId(id);
+				person.setPersonId(id);
 				person.setFirstname(resultset.getString(FIELD_FIRSTNAME));
 				person.setLastname(resultset.getString(FIELD_LASTNAME));
 				person.setDateOfBirth(convertToLocalDate(resultset.getString(FIELD_DATE_OF_BIRTH)));
-				List<OtherName> otherNames = fetchOtherNames(connection, person);
+				List<OtherName> otherNames = fetchOtherNames(connection, id);
+				if (Objects.nonNull(otherNames)) {
+					for (OtherName otherName : otherNames) {
+						otherName.setPerson(person);
+					}
+				}
 				person.setOtherNames(otherNames);
 				persons.add(person);
 			}
@@ -99,9 +104,9 @@ public class PersonDao {
 		return null;
 	}
 	
-	private List<OtherName> fetchOtherNames(Connection connection, Person person) throws SQLException{
+	List<OtherName> fetchOtherNames(Connection connection, long personId) throws SQLException{
 		PreparedStatement statement = connection.prepareStatement(GET_OTHER_NAMES_SQL);
-		statement.setLong(PARAMETER_PERSON_ID_FOR_OTHER_NAMES_SQL, person.getPersonId());
+		statement.setLong(PARAMETER_PERSON_ID_FOR_OTHER_NAMES_SQL, personId);
 		ResultSet resultset = statement.executeQuery();
 		List<OtherName> otherNames = null;
 		while(resultset.next()) {
@@ -110,7 +115,6 @@ public class PersonDao {
 			otherName.setOtherNameId(resultset.getLong(FIELD_OTHER_NAME_ID));
 			otherName.setValue(resultset.getString(FIELD_OTHER_NAME));
 			otherName.setNameType(new OtherNameType(resultset.getLong(FIELD_OTHER_NAME_TYPE_ID), resultset.getString(FIELD_OTHER_NAME_TYPE)));
-			otherName.setPerson(person);
 			otherNames.add(otherName);
 		}
 		return otherNames;

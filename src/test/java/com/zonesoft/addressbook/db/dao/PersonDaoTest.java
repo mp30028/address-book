@@ -9,20 +9,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import com.zonesoft.addressbook.db.ConnectionManager;
 import com.zonesoft.addressbook.entities.Person;
-import com.zonesoft.addressbook.testing.data_generator.PersonDataGenerator.Gender;
-
 import static com.zonesoft.addressbook.db.sql.PersonSql.*;
-import static com.zonesoft.addressbook.testing.data_generator.PersonDataGenerator.generatePersonData;
-import static com.zonesoft.addressbook.testing.data_generator.PersonDataGenerator.generateOtherNamesData;
-import static com.zonesoft.addressbook.utils.Utils.convertToLocalDate;
+import static com.zonesoft.addressbook.testing.data_generator.PersonDataGenerator.*;
 
 
 class PersonDaoTest {
@@ -31,6 +25,11 @@ class PersonDaoTest {
 	private Statement mockStatement = Mockito.mock(Statement.class);
 	private ResultSet mockResultSet = Mockito.mock(ResultSet.class);
 	private PersonDao personDao; //Subject under test 
+	int expectedResultsSize = 2;
+
+	
+	PreparedStatement mockOtherNamesStatement = Mockito.mock(PreparedStatement.class);
+	ResultSet mockOtherNamesResultset = Mockito.mock(ResultSet.class);
 	
 	
 	@BeforeEach
@@ -42,145 +41,94 @@ class PersonDaoTest {
 		when(mockConnectionManager.getConnection()).thenReturn(mockConnection);
 		when(mockConnection.createStatement()).thenReturn(mockStatement);
 		personDao = new PersonDao(mockConnectionManager);
-		assertNotNull(personDao);		
+		assertNotNull(personDao);
+		when(mockStatement.executeQuery(GET_ALL_SQL)).thenReturn(mockResultSet);
+		when(mockConnection.prepareStatement(GET_OTHER_NAMES_SQL)).thenReturn(mockOtherNamesStatement);
+		when(mockOtherNamesStatement.executeQuery()).thenReturn(mockOtherNamesResultset);	
 	}
 	
 	@Test
 	void testFetchAll_WHEN_resultsetIsEmpty_THEN_nullIsReturned() throws SQLException {
-		when(mockStatement.executeQuery(GET_ALL_SQL)).thenReturn(mockResultSet);
 		when(mockResultSet.next()).thenReturn(false);
 		assertNull(personDao.fetchAll());
 	}
 
-	@Test
-	void testFetchAll_WHEN_resultsetIsNotEmpty_AND_allPersonsHaveNoOtherNames_THEN_listOfPersonsIsReturned() throws SQLException {
-		int expectedResultsSize = 2;
-		when(mockStatement.executeQuery(GET_ALL_SQL)).thenReturn(mockResultSet);
-			when(mockResultSet.next()).thenReturn(true,true,false);
-			Map<String, Object> dataPerson1 = generatePersonData();
-			Map<String, Object> dataPerson2 = generatePersonData();
-			List<Map<String, Object>> allPersonsData = new ArrayList<Map<String,Object>>();
-			allPersonsData.add(dataPerson1);
-			allPersonsData.add(dataPerson2);
-			when(mockResultSet.getLong(FIELD_PERSON_ID))
-				.thenReturn(
-						(Long) dataPerson1.get(FIELD_PERSON_ID), 
-						(Long) dataPerson2.get(FIELD_PERSON_ID)
-			);
-			
-			when(mockResultSet.getString(FIELD_FIRSTNAME)).
-				thenReturn(
-						(String) dataPerson1.get(FIELD_FIRSTNAME), 
-						(String) dataPerson2.get(FIELD_FIRSTNAME)
-			);
-			
-			when(mockResultSet.getString(FIELD_LASTNAME)).
-				thenReturn(
-							(String) dataPerson1.get(FIELD_LASTNAME), 
-							(String) dataPerson2.get(FIELD_LASTNAME)
-			);
-			
-			when(mockResultSet.getString(FIELD_DATE_OF_BIRTH)).
-				thenReturn(
-						(String) dataPerson1.get(FIELD_DATE_OF_BIRTH), 
-						(String) dataPerson2.get(FIELD_DATE_OF_BIRTH)
-			);
-			
-			PreparedStatement mockOtherNamesStatement = Mockito.mock(PreparedStatement.class);
-			ResultSet mockOtherNamesResultset = Mockito.mock(ResultSet.class);
-			when(mockConnection.prepareStatement(GET_OTHER_NAMES_SQL)).thenReturn(mockOtherNamesStatement);
-			when(mockOtherNamesStatement.executeQuery()).thenReturn(mockOtherNamesResultset);
-			when(mockOtherNamesResultset.next()).thenReturn(false);
-		List<Person> persons = personDao.fetchAll();
-		assertNotNull(persons);
-		assertEquals(expectedResultsSize, persons.size());
-		for(int j=0; j < expectedResultsSize; j++) {
-			Person person = persons.get(j);
-			Map<String, Object> data = allPersonsData.get(j);
-			assertEquals(data.get(FIELD_PERSON_ID), person.getPersonId());
-			assertEquals(data.get(FIELD_FIRSTNAME), person.getFirstname());
-			assertEquals(data.get(FIELD_LASTNAME), person.getLastname());
-			assertEquals(convertToLocalDate((String)data.get(FIELD_DATE_OF_BIRTH)), person.getDateOfBirth());
-		}
-	}
-	
-	@Test
-	void testFetchAll_WHEN_resultsetIsNotEmpty_AND_allPersonsHaveOtherNames_THEN_listOfPersonsIsReturned() throws SQLException {
-		int expectedResultsSize = 2;
-		when(mockStatement.executeQuery(GET_ALL_SQL)).thenReturn(mockResultSet);
-			when(mockResultSet.next()).thenReturn(true,true,false);
-			Map<String, Object> dataPerson1 = generatePersonData();
-			Map<String, Object> dataPerson2 = generatePersonData();
-			List<Map<String, Object>> allPersonsData = new ArrayList<Map<String,Object>>();
-			allPersonsData.add(dataPerson1);
-			allPersonsData.add(dataPerson2);
-			
-			when(mockResultSet.getLong(FIELD_PERSON_ID))
-				.thenReturn(
-						(Long) dataPerson1.get(FIELD_PERSON_ID), 
-						(Long) dataPerson2.get(FIELD_PERSON_ID)
-			);
-			
-			when(mockResultSet.getString(FIELD_FIRSTNAME)).
-				thenReturn(
-						(String) dataPerson1.get(FIELD_FIRSTNAME), 
-						(String) dataPerson2.get(FIELD_FIRSTNAME)
-			);
-			
-			when(mockResultSet.getString(FIELD_LASTNAME)).
-				thenReturn(
-							(String) dataPerson1.get(FIELD_LASTNAME), 
-							(String) dataPerson2.get(FIELD_LASTNAME)
-			);
-			
-			when(mockResultSet.getString(FIELD_DATE_OF_BIRTH)).
-				thenReturn(
-						(String) dataPerson1.get(FIELD_DATE_OF_BIRTH), 
-						(String) dataPerson2.get(FIELD_DATE_OF_BIRTH)
-			);
-			
-			PreparedStatement mockOtherNamesStatement = Mockito.mock(PreparedStatement.class);
-			ResultSet mockOtherNamesResultset = Mockito.mock(ResultSet.class);
-			when(mockConnection.prepareStatement(GET_OTHER_NAMES_SQL)).thenReturn(mockOtherNamesStatement);
-			when(mockOtherNamesStatement.executeQuery()).thenReturn(mockOtherNamesResultset);
-			when(mockOtherNamesResultset.next()).thenReturn(true);
-
-			
+	private void mockoutResultsetGets(Person generatedPerson1, Person generatedPerson2) throws SQLException {
+		when(mockResultSet.getLong(FIELD_PERSON_ID))
+			.thenReturn(
+					generatedPerson1.getPersonId(), 
+					generatedPerson2.getPersonId()
+		);
 		
-			List<Map<String, Object>> dataOtherNames1 = generateOtherNamesData((Gender)dataPerson1.get(FIELD_GENDER), 3);
-			List<Map<String, Object>> dataOtherNames2 = generateOtherNamesData((Gender)dataPerson2.get(FIELD_GENDER), 1);
-			List<List<Map<String, Object>>> allOtherNamesData = new ArrayList<>();
-			allOtherNamesData.add(dataOtherNames1);
-			allOtherNamesData.add(dataOtherNames2);
-			
-			when(mockOtherNamesResultset.getLong(FIELD_OTHER_NAME_ID))
-				.thenReturn(
-						(Long) dataOtherNames1.get(0).get(FIELD_OTHER_NAME_ID),
-						(Long) dataOtherNames1.get(1).get(FIELD_OTHER_NAME_ID),
-						(Long) dataOtherNames1.get(2).get(FIELD_OTHER_NAME_ID)
-			);
-			
-//			when(mockOtherNamesResultset.getString(FIELD_DATE_OF_BIRTH)).
-//			thenReturn(
-//					(String) dataOtherNames1.get(FIELD_DATE_OF_BIRTH), 
-//					(String) dataOtherNames1.get(FIELD_DATE_OF_BIRTH)
-//			);
-			
-			
-			
-			
-		List<Person> persons = personDao.fetchAll();
-		assertNotNull(persons);
-		assertEquals(expectedResultsSize, persons.size());
+		when(mockResultSet.getString(FIELD_FIRSTNAME)).
+			thenReturn(
+					generatedPerson1.getFirstname(), 
+					generatedPerson2.getFirstname()
+		);
+		
+		when(mockResultSet.getString(FIELD_LASTNAME)).
+			thenReturn(
+					generatedPerson1.getLastname(), 
+					generatedPerson2.getLastname()
+		);
+		
+		when(mockResultSet.getString(FIELD_DATE_OF_BIRTH)).
+			thenReturn(
+					generatedPerson1.getDateOfBirth().toString(), 
+					generatedPerson2.getDateOfBirth().toString()
+		);				
+	}
+
+	
+	@Test
+	void testFetchAll_WHEN_resultsetIsNotEmpty_AND_allPersonsHaveNoOtherNames_THEN_listOfPersonsIsReturnedWithOtherNamesNull() throws SQLException {
+		Person generatedPerson1 = generatePerson(false);;
+		Person generatedPerson2 = generatePerson(false);;
+		mockoutResultsetGets(generatedPerson1,generatedPerson2);
+		@SuppressWarnings("serial")
+		List<Person> allGeneratedPersons = new ArrayList<Person>() {{add(generatedPerson1);add(generatedPerson2);}};
+		when(mockResultSet.next()).thenReturn(true,true,false);
+		when(mockOtherNamesResultset.next()).thenReturn(false);
+		
+		List<Person> fetchedPersons = personDao.fetchAll();
+		assertNotNull(fetchedPersons);
+		assertEquals(expectedResultsSize, fetchedPersons.size());
 		for(int j=0; j < expectedResultsSize; j++) {
-			Person person = persons.get(j);
-			Map<String, Object> data = allPersonsData.get(j);
-			assertEquals(data.get(FIELD_PERSON_ID), person.getPersonId());
-			assertEquals(data.get(FIELD_FIRSTNAME), person.getFirstname());
-			assertEquals(data.get(FIELD_LASTNAME), person.getLastname());
-			assertEquals(convertToLocalDate((String)data.get(FIELD_DATE_OF_BIRTH)), person.getDateOfBirth());
+			Person fetchedPerson = fetchedPersons.get(j);
+			Person generatedPerson = allGeneratedPersons.get(j);
+			assertEquals(generatedPerson.getPersonId(), fetchedPerson.getPersonId());
+			assertEquals(generatedPerson.getFirstname(), fetchedPerson.getFirstname());
+			assertEquals(generatedPerson.getLastname(), fetchedPerson.getLastname());
+			assertEquals(generatedPerson.getDateOfBirth(), fetchedPerson.getDateOfBirth());
+			assertNull(fetchedPerson.getOtherNames());
 		}
 	}
 	
-	
+
+	@Test
+	void testFetchAll_WHEN_resultsetIsNotEmpty_AND_allPersonsHaveOtherNames_THEN_listOfPersonsIsReturnedWithOtherNamesNotNull() throws SQLException {
+		Person generatedPerson1 = generatePerson(true);;
+		Person generatedPerson2 = generatePerson(true);;
+		mockoutResultsetGets(generatedPerson1,generatedPerson2);
+		@SuppressWarnings("serial")
+		List<Person> allGeneratedPersons = new ArrayList<Person>() {{add(generatedPerson1);add(generatedPerson2);}};
+		when(mockResultSet.next()).thenReturn(true,true,false);
+		when(mockOtherNamesResultset.next()).thenReturn(true,true,false,true,false);
+		when(mockOtherNamesResultset.getLong(FIELD_OTHER_NAME_ID)).thenReturn(generateId());
+		when(mockOtherNamesResultset.getString(FIELD_OTHER_NAME)).thenReturn(generateOtherName(generateGender()));
+		when(mockOtherNamesResultset.getLong(FIELD_OTHER_NAME_TYPE_ID)).thenReturn((long) generateOtherNameTypeId());
+		when(mockOtherNamesResultset.getString(FIELD_OTHER_NAME_TYPE)).thenReturn(generateOtherNameType().toString());
+		List<Person> fetchedPersons = personDao.fetchAll();
+		assertNotNull(fetchedPersons);
+		assertEquals(expectedResultsSize, fetchedPersons.size());
+		for(int j=0; j < expectedResultsSize; j++) {
+			Person fetchedPerson = fetchedPersons.get(j);
+			Person generatedPerson = allGeneratedPersons.get(j);
+			assertEquals(generatedPerson.getPersonId(), fetchedPerson.getPersonId());
+			assertEquals(generatedPerson.getFirstname(), fetchedPerson.getFirstname());
+			assertEquals(generatedPerson.getLastname(), fetchedPerson.getLastname());
+			assertEquals(generatedPerson.getDateOfBirth(), fetchedPerson.getDateOfBirth());
+			assertNotNull(fetchedPerson.getOtherNames());
+		}
+	}
 }

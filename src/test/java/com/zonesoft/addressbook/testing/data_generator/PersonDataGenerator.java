@@ -1,14 +1,13 @@
 package com.zonesoft.addressbook.testing.data_generator;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.zonesoft.addressbook.entities.OtherName;
-
-import static com.zonesoft.addressbook.db.sql.PersonSql.*;
+import com.zonesoft.addressbook.entities.OtherNameType;
+import com.zonesoft.addressbook.entities.Person;
 
 public class PersonDataGenerator {
 	
@@ -87,8 +86,9 @@ public class PersonDataGenerator {
 		return SURNAMES[randomInt(0, SURNAMES.length-1)];
 	}
 	
-	public static String generateDateOfBirth() {
-		return DATES_1937_TO_1994[randomInt(0, DATES_1937_TO_1994.length-1)];
+	public static LocalDate generateDateOfBirth() {
+		String dateAsString = DATES_1937_TO_1994[randomInt(0, DATES_1937_TO_1994.length-1)];
+		return LocalDate.parse(dateAsString);
 	}
 	
 	public static long generateId() {
@@ -97,37 +97,37 @@ public class PersonDataGenerator {
 		return ThreadLocalRandom.current().nextLong(min, max);
 	}
 	
-	public static Map<String, Object> generatePersonData(){
-		Map<String, Object> testData = new HashMap<String, Object>();
+	public static Person generatePerson(boolean hasOtherNames){
+		Person person = new Person();
 		Gender gender = generateGender();
-		testData.put(FIELD_PERSON_ID, generateId());
-		testData.put(FIELD_FIRSTNAME, generateFirstName(gender));
-		testData.put(FIELD_LASTNAME, generateLastName());
-		testData.put(FIELD_DATE_OF_BIRTH, generateDateOfBirth());
-		testData.put(FIELD_GENDER, gender);
-		return testData;
+		person.setPersonId(generateId());
+		person.setFirstname(generateFirstName(gender));
+		person.setLastname(generateLastName());
+		person.setDateOfBirth(generateDateOfBirth());
+		if (hasOtherNames) person.setOtherNames(generateOtherNames(gender));
+		return person;
 	}
 	
 	public static int generateOtherNameTypeId() {
 		return randomInt(0, OTHER_NAME_TYPES.length-1);
 	}
 	
-	private static String generateOtherNameType(int otherNameTypeId) {
-		return OTHER_NAME_TYPES[otherNameTypeId];
+	public static OtherNameType generateOtherNameType() {		
+		int otherNameTypeId = generateOtherNameTypeId();
+		return new OtherNameType(otherNameTypeId, OTHER_NAME_TYPES[otherNameTypeId]);		
 	}
 	
-	public static List<Map<String, Object>> generateOtherNamesData(Gender gender, int numberOfOtherNames){
-		List<Map<String, Object>> otherNamesData = new ArrayList<>();
+	public static List<OtherName> generateOtherNames(Gender gender){
+		List<OtherName> otherNames = new ArrayList<>();
+		int numberOfOtherNames = randomInt(0, 6);
 		for (int j=0; j < numberOfOtherNames; j++) {
-			Map<String, Object> individualOtherName = new HashMap<String, Object>();
-			individualOtherName.put(FIELD_OTHER_NAME_ID, generateId());
-			individualOtherName.put(FIELD_OTHER_NAME, generateOtherName(gender));
-			int otherNameTypeId = generateOtherNameTypeId();
-			individualOtherName.put(FIELD_OTHER_NAME_TYPE_ID, otherNameTypeId);
-			individualOtherName.put(FIELD_OTHER_NAME_TYPE, generateOtherNameType(otherNameTypeId));
-			otherNamesData.add(individualOtherName);
+			OtherName otherName = new OtherName();
+			otherName.setOtherNameId(generateId());
+			otherName.setValue(generateOtherName(gender));
+			otherName.setNameType(generateOtherNameType());
+			otherNames.add(otherName);
 		}
-		return otherNamesData;
+		return otherNames;
 	}
 
 

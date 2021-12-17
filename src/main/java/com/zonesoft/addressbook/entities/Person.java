@@ -21,7 +21,7 @@ public class Person {
 		return personId;
 	}
 
-	public void sePersonId(long id) {
+	public void setPersonId(long id) {
 		this.personId = id;
 	}
 
