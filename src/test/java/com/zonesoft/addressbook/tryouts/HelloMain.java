@@ -1,4 +1,4 @@
-package com.zonesoft.addressbook.hello;
+package com.zonesoft.addressbook.tryouts;
 
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
