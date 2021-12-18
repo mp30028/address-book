@@ -3,6 +3,7 @@ package com.zonesoft.addressbook.tryouts;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import com.zonesoft.addressbook.db.ConnectionManager;
@@ -13,7 +14,7 @@ import com.zonesoft.addressbook.properties.ApplicationProperties;
 class PersonDaoTryout {
 	private static final Logger LOGGER = Logger.getLogger(PersonDaoTryout.class);
 	
-	@Test
+//	@Test
 	void tryoutPersonDaoFetchAll() {
 		ConnectionManager connectionManager = new ConnectionManager(new ApplicationProperties());
 		PersonDao personDao = new PersonDao(connectionManager);
