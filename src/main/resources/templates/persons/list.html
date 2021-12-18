@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Persons</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<link rel="stylesheet" type="text/css" href="/address-book/static/css/main.css">
+<body>
+	<form action="person" method="get">
+		<table style="width: 60%;">
+			<thead>
+				<tr>
+					<th>Person ID</th>
+					<th>Lastname</th>
+					<th>Firstname</th>
+					<th>Birth-Date</th>
+				</tr>
+			</thead>
+			<tr th:each="person: ${persons}" th:id="${person.getPersonId()}" >
+				<td th:text ="${person.getPersonId()}"></td>
+				<td th:text ="${person.getLastname()}"></td>
+				<td th:text ="${person.getFirstname()}"></td>
+				<td th:text ="${person.getDateOfBirth()}"></td>
+			</tr>
+			<tr>
+				<td colspan="4">
+					<button type="submit" name="action" id="action" value="ADD" >Add</button>
+					<button type="submit" name="action" id="action" value="EDIT">Edit</button>
+					<button type="submit" name="action" id="action" value="DELETE">Delete</button>
+					<button type="submit" name="action" id="action" value="HOME">Home</button>
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

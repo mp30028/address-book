@@ -1,4 +1,4 @@
-package com.zonesoft.addressbook.servlets;
+package com.zonesoft.addressbook.webui;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -14,11 +14,11 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
 
-public class HelloServlet extends HttpServlet {
+public class GreetingController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
 
-    public HelloServlet() {
+    public GreetingController() {
         super();
     }
 
@@ -34,12 +34,12 @@ public class HelloServlet extends HttpServlet {
         resolver.setPrefix("/templates/");
         resolver.setSuffix(".html");
         resolver.setCharacterEncoding("UTF-8");
-        resolver.setTemplateMode(TemplateMode.HTML); // HTML5 option was deprecated in 3.0.0
+        resolver.setTemplateMode(TemplateMode.HTML);
         templateEngine.setTemplateResolver(resolver);
         Context ct = new Context();
         ct.setVariable("name", "foo");
         ct.setVariable("date", LocalDateTime.now().toString());
-        return templateEngine.process("greeting.html", ct);
+        return templateEngine.process("greetings/greeting.html", ct);
     }
 	
 }

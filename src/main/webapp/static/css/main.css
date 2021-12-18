@@ -1,0 +1,27 @@
+@charset "ISO-8859-1";
+
+h1   {color: black;}
+
+table {
+	border-style: solid;
+	border-width: 1pt;
+	border-color: black;
+	font-family: Arial;
+	font-size: 9pt;
+  	width: 90%;
+	
+}
+
+td {
+	border-style: solid;
+	border-color: grey;
+	border-width: 1pt;
+}
+
+
+th {
+	background-color: blue;
+	color: white;
+	font-weight: bold;
+	text-align: center;
+}
