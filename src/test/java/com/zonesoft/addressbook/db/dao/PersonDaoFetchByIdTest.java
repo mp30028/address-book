@@ -76,13 +76,13 @@ class PersonDaoFetchByIdTest {
 	}
 	
 	@Test
-	void testFetchById_WHEN_personWithIdIsFound_AND_hasOtherNames_THEN_returnsPersonWithOtherNamesNull() throws SQLException {
+	void testFetchById_WHEN_personWithIdIsFound_AND_hasOtherNames_THEN_returnsPersonWithOtherNames() throws SQLException {
 		Person generatedPerson = generatePerson(true);
 		when(mockStatement.executeQuery()).thenReturn(mockResultSet);
 		when(mockResultSet.next()).thenReturn(true, false);
 		mockoutResultsetGets(mockResultSet, generatedPerson);
 		when(mockOtherNamesStatement.executeQuery()).thenReturn(mockOtherNamesResultset);
-		when(mockOtherNamesResultset.next()).thenReturn(true,false);
+		when(mockOtherNamesResultset.next()).thenReturn(true);
 		PersonDao personDao = new PersonDao(mockConnectionManager);
 		assertNotNull(personDao);	
 		Person fetchedPerson = personDao.fetchById(generatedPerson.getPersonId());
