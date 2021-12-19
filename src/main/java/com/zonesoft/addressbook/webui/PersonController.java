@@ -1,6 +1,8 @@
 package com.zonesoft.addressbook.webui;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import javax.servlet.RequestDispatcher;
@@ -9,12 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
-import org.thymeleaf.templatemode.TemplateMode;
-import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
-
-import com.zonesoft.addressbook.services.PersonService;
+import com.zonesoft.addressbook.services.data.PersonService;
+import com.zonesoft.addressbook.services.rendering.HtmlView;
 
 
 public class PersonController extends HttpServlet {
@@ -26,6 +24,9 @@ public class PersonController extends HttpServlet {
 	private static final String ACTION_EDIT = "EDIT";
 	private static final String ACTION_DELETE = "DELETE";
 	private static final String ACTION_RETURN_HOME = "HOME";
+	
+	private static final String LIST_TEMPLATE_PATH = "persons/list.html"; 
+	private static final HtmlView htmlView = new HtmlView();
 
     public PersonController() {
         super();
@@ -63,7 +64,8 @@ public class PersonController extends HttpServlet {
 	}
 
     private void viewList(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    	response.getWriter().append(getListTemplate());
+    	String html = htmlView.create(LIST_TEMPLATE_PATH, getListModel());
+    	response.getWriter().append(html);
 	}
 
 
@@ -97,19 +99,12 @@ public class PersonController extends HttpServlet {
 		
 	}
 
+	
+	private Map<String, Object> getListModel(){
+		Map<String, Object> model = new HashMap<>();
+		model.put("persons", personService.fetchAllPersons());
+		return model;
+	}
 
-
-	private  String getListTemplate() {
-        TemplateEngine templateEngine = new TemplateEngine();
-        ClassLoaderTemplateResolver resolver = new ClassLoaderTemplateResolver();
-        resolver.setPrefix("/templates/");
-        resolver.setSuffix(".html");
-        resolver.setCharacterEncoding("UTF-8");
-        resolver.setTemplateMode(TemplateMode.HTML);
-        templateEngine.setTemplateResolver(resolver);
-        Context ct = new Context();
-        ct.setVariable("persons", personService.fetchAllPersons());
-        return templateEngine.process("persons/list.html", ct);
-    }
 	
 }

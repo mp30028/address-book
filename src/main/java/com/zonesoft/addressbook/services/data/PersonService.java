@@ -1,4 +1,4 @@
-package com.zonesoft.addressbook.services;
+package com.zonesoft.addressbook.services.data;
 
 import java.util.List;
 

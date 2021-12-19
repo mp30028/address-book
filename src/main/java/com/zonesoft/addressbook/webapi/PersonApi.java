@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.zonesoft.addressbook.services.PersonService;
+import com.zonesoft.addressbook.services.data.PersonService;
 
 
 public class PersonApi extends HttpServlet {
