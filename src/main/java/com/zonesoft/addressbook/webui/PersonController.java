@@ -102,7 +102,7 @@ public class PersonController extends HttpServlet {
 	
 	private Map<String, Object> getListModel(){
 		Map<String, Object> model = new HashMap<>();
-		model.put("persons", personService.fetchAllPersons());
+		model.put("persons", personService.fetchAll());
 		return model;
 	}
 

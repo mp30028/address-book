@@ -30,39 +30,49 @@ public class PersonDao {
 		PersonDao.connectionManager = connectionManager;
 	}
 	
-	public Person getById(long id) {
-		// TODO 
-		return null;
-	}
-	
-	public List<Person> fetchAll(){
-		Connection connection = PersonDao.connectionManager.getConnection();
-		if (Objects.isNull(connection)) {
-			String message = "Connection to database was null. Could not proceed with fetchAll request";
-			ConnectException exception = new ConnectException(message);
+	public Person fetchById(long personId) {
+		Connection connection = getCheckedConnection();
+		Person person = null;
+		try {
+			PreparedStatement statement = connection.prepareStatement(GET_BY_ID_SQL);
+			statement.setLong(PARAMETER_INDEX_PERSON_ID_FOR_GET_BY_ID_SQL, personId);
+			ResultSet resultset = statement.executeQuery();
+			if(Objects.nonNull(resultset)) {
+				person = unmarshallResultset(resultset);
+				fetchAndUpdateOtherNames(connection, person);
+			}
+		} catch (SQLException e) {
+			String message = "SQL Exception trying to execute SQL=" + GET_BY_ID_SQL;
 			LOGGER.error(message);
-			throw new AddressBookException(exception);
+			LOGGER.error(sqlExceptionAsString(e));
+			e.printStackTrace();
+			throw new AddressBookException(message, e);
+		} finally {
+			try {
+				if (Objects.nonNull(connection)) {
+					if (!connection.isClosed())
+						connection.close();
+				}
+			} catch (SQLException e) {
+				String message = "Failed to close connection to db. Connection is in an unexpected state";
+				LOGGER.error(message);
+				LOGGER.error(sqlExceptionAsString(e));
+				e.printStackTrace();
+			}
 		}
+		return person;
+	}
+
+	public List<Person> fetchAll(){
+		Connection connection = getCheckedConnection();
 		List<Person> persons = null;
 		try {
 			Statement statement = connection.createStatement();
 			ResultSet resultset = statement.executeQuery(GET_ALL_SQL);
 			while(resultset.next()) {
 				if (Objects.isNull(persons)) persons = new ArrayList<Person>();
-				long id = resultset.getLong(FIELD_PERSON_ID);
-				
-				Person person = new Person();
-				person.setPersonId(id);
-				person.setFirstname(resultset.getString(FIELD_FIRSTNAME));
-				person.setLastname(resultset.getString(FIELD_LASTNAME));
-				person.setDateOfBirth(convertToLocalDate(resultset.getString(FIELD_DATE_OF_BIRTH)));
-				List<OtherName> otherNames = fetchOtherNames(connection, id);
-				if (Objects.nonNull(otherNames)) {
-					for (OtherName otherName : otherNames) {
-						otherName.setPerson(person);
-					}
-				}
-				person.setOtherNames(otherNames);
+				Person person = unmarshallResultset(resultset);
+				fetchAndUpdateOtherNames(connection, person);
 				persons.add(person);
 			}
 		} catch (SQLException e) {
@@ -73,9 +83,11 @@ public class PersonDao {
 			throw new AddressBookException(message, e);
 		}finally {
 			try {
-				if (Objects.nonNull(connection)) connection.close();
+				if (Objects.nonNull(connection)) {
+					if (!connection.isClosed()) connection.close();
+				}
 			} catch (SQLException e) {
-				String message = "Failed to close connection to db" ;
+				String message = "Failed to close connection to db. Connection is in an unexpected state" ;
 				LOGGER.error(message);
 				LOGGER.error(sqlExceptionAsString(e));
 				e.printStackTrace();
@@ -104,19 +116,53 @@ public class PersonDao {
 		return null;
 	}
 	
-	List<OtherName> fetchOtherNames(Connection connection, long personId) throws SQLException{
+	private void fetchAndUpdateOtherNames(Connection connection, Person person) throws SQLException {
+		List<OtherName> otherNames = fetchOtherNames(connection, person.getPersonId());
+		if (Objects.nonNull(otherNames)) {
+			for (OtherName otherName : otherNames) {
+				otherName.setPerson(person);
+			}
+		}
+		person.setOtherNames(otherNames);
+	}
+	
+	private List<OtherName> fetchOtherNames(Connection connection, long personId) throws SQLException{
 		PreparedStatement statement = connection.prepareStatement(GET_OTHER_NAMES_SQL);
-		statement.setLong(PARAMETER_PERSON_ID_FOR_OTHER_NAMES_SQL, personId);
+		statement.setLong(PARAMETER_INDEX_PERSON_ID_FOR_OTHER_NAMES_SQL, personId);
 		ResultSet resultset = statement.executeQuery();
 		List<OtherName> otherNames = null;
-		while(resultset.next()) {
-			if (Objects.isNull(otherNames)) otherNames = new ArrayList<OtherName>();
-			OtherName otherName = new OtherName();
-			otherName.setOtherNameId(resultset.getLong(FIELD_OTHER_NAME_ID));
-			otherName.setValue(resultset.getString(FIELD_OTHER_NAME));
-			otherName.setNameType(new OtherNameType(resultset.getLong(FIELD_OTHER_NAME_TYPE_ID), resultset.getString(FIELD_OTHER_NAME_TYPE)));
-			otherNames.add(otherName);
+		if (Objects.nonNull(resultset)) {
+			while(resultset.next()) {
+				if (Objects.isNull(otherNames)) otherNames = new ArrayList<OtherName>();
+				OtherName otherName = new OtherName();
+				otherName.setOtherNameId(resultset.getLong(FIELD_OTHER_NAME_ID));
+				otherName.setValue(resultset.getString(FIELD_OTHER_NAME));
+				otherName.setNameType(new OtherNameType(resultset.getLong(FIELD_OTHER_NAME_TYPE_ID), resultset.getString(FIELD_OTHER_NAME_TYPE)));
+				otherNames.add(otherName);
+			}
 		}
 		return otherNames;
 	}
+	
+	private Person unmarshallResultset(ResultSet resultset) throws SQLException {
+		Person person = new Person();
+		person.setPersonId(resultset.getLong(FIELD_PERSON_ID));
+		person.setFirstname(resultset.getString(FIELD_FIRSTNAME));
+		person.setLastname(resultset.getString(FIELD_LASTNAME));
+		person.setDateOfBirth(convertToLocalDate(resultset.getString(FIELD_DATE_OF_BIRTH)));
+		return person;
+	}
+	
+	private Connection getCheckedConnection() {
+		Connection connection = PersonDao.connectionManager.getConnection();
+		if (Objects.isNull(connection)) {
+			String message = "Connection to database was null. Could not proceed with fetchAll request";
+			ConnectException exception = new ConnectException(message);
+			LOGGER.error(message);
+			throw new AddressBookException(exception);
+		}
+		return connection;
+	}
+	
+	
 }

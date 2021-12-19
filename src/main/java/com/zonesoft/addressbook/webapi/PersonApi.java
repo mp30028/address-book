@@ -18,7 +18,7 @@ public class PersonApi extends HttpServlet {
         super();
     }
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.getWriter().append(personService.fetchAllPersonsJson());
+		response.getWriter().append(personService.fetchAllJson());
 	}
 	
 }

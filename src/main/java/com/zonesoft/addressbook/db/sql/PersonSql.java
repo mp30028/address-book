@@ -10,7 +10,8 @@ public class PersonSql {
 	public static final String FIELD_OTHER_NAME_TYPE_ID = "other_name_type_id";
 	public static final String FIELD_OTHER_NAME_TYPE = "other_name_type";
 	public static final String FIELD_GENDER = "gender";
-	public static final int PARAMETER_PERSON_ID_FOR_OTHER_NAMES_SQL = 1;
+	public static final int PARAMETER_INDEX_PERSON_ID_FOR_OTHER_NAMES_SQL = 1;
+	public static final int PARAMETER_INDEX_PERSON_ID_FOR_GET_BY_ID_SQL = 1;
 	
 	public static final String GET_ALL_SQL = 
 			"SELECT"
@@ -38,4 +39,15 @@ public class PersonSql {
 			+ 	" on a.other_name_type_id = b.other_name_type_id"
 			+ " WHERE"
 			+ 	" a.person_id = ?";
+	
+	public static final String GET_BY_ID_SQL =
+			"SELECT"
+			+ 	" person_id,"
+			+ 	" firstname,"
+			+ 	" lastname,"
+			+ 	" birth_date"
+			+ " FROM"
+			+ 	" t_person"
+			+ " WHERE"
+			+ 	" person_id = ?";
 }

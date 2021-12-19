@@ -19,7 +19,7 @@ import static com.zonesoft.addressbook.db.sql.PersonSql.*;
 import static com.zonesoft.addressbook.testing.data_generator.PersonDataGenerator.*;
 
 
-class PersonDaoTest {
+class PersonDaoFetchAllTest {
 	private ConnectionManager mockConnectionManager = Mockito.mock(ConnectionManager.class);
 	private Connection mockConnection = Mockito.mock(Connection.class);
 	private Statement mockStatement = Mockito.mock(Statement.class);

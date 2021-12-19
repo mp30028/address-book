@@ -14,15 +14,18 @@ public class PersonService {
 	private static final ConnectionManager connectionManager = new ConnectionManager(applicationProperties);
     private static final PersonDao personDao = new PersonDao(connectionManager);
     
-	public String fetchAllPersonsJson() throws JsonProcessingException {
+	public String fetchAllJson() throws JsonProcessingException {
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.findAndRegisterModules();
-		String json = objectMapper.writeValueAsString(fetchAllPersons());
+		String json = objectMapper.writeValueAsString(fetchAll());
 		return json;
 	}
 
-	public List<Person> fetchAllPersons() {
+	public List<Person> fetchAll() {
 		return personDao.fetchAll();
 	}
 	
+	public Person fetchById(long id) {
+		return personDao.fetchById(id);
+	}
 }
