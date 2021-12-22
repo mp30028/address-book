@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html 	xmlns="http://www.w3.org/1999/xhtml" 
+		xmlns:th="http://www.thymeleaf.org" 
+		xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" 
+		xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+	<head>
+		<meta charset="ISO-8859-1">
+		<title th:text="${pageTitleText}"></title>
+	</head>
+	<link rel="stylesheet" type="text/css" href="/css/main.css">
+	<script src="/js/assets/jquery/jquery-3.5.1.js"></script>
+	<script type="text/javascript">
+
+		function processSimpleText(){
+//			for_now ? nothing_to_do_here : add_here_for_future  
+		};		
+		
+		
+		function processNestedEntities(){
+			var nestedEntityCells = $("td[handleAs = 'NESTED_ENTITY']");
+			for(var j=0; j < nestedEntityCells.length; j++){
+				cell = nestedEntityCells[j];
+				var jsonObject = JSON.parse(cell.innerText);
+				var dataObject = jsonObject.data;
+				var apiUri = "/swot/api/v1/" + dataObject.name + "/get-all";
+				makeApiCalls(apiUri, cb_addDropDownToElement, cell)
+			}
+		};
+		
+		function makeApiCalls(url, callbackHandler, htmlElementToAppendTo){
+			var apiRequestSettings = 
+			{
+				url: url, 
+				dataType:'json', 
+				context:htmlElementToAppendTo, 
+				success: function(returnedContent){callbackHandler(returnedContent, this);}
+			};
+			$.get(apiRequestSettings);							
+		}
+		
+		function cb_addDropDownToElement(dropDownData, element){
+			var directive = JSON.parse($(element).text()); 
+			var displayFields = directive.display_directive.summary_display.attributes;
+			var idFields = directive.display_directive.id_fields;
+			var seperator = directive.display_directive.summary_display.seperator;
+			var newSelectElement = $('<select></select>');
+			newSelectElement.append($('<option value="-1">-</option>'));
+			for(var j=0; j < dropDownData.length; j++){
+				var dropDownDataItem = dropDownData[j];
+				var newOptionElement = $('<option></option>');
+				var idString = '';
+				for(var k=0; k < idFields.length; k++){
+					if (idString == ''){
+						idString = dropDownDataItem[idFields[k]] ;
+					}else{
+						idString = idString + "." + dropDownDataItem[idFields[k]] ;	
+					}					
+				}
+				newOptionElement.val(idString);
+				var dropDownDisplayedValue = '';
+				for (var k=0; k < displayFields.length; k++){
+					if (dropDownDisplayedValue == ''){
+						dropDownDisplayedValue = unpack(dropDownDataItem, displayFields[k].attribute_name)
+					}else{
+						dropDownDisplayedValue = dropDownDisplayedValue + seperator + unpack(dropDownDataItem, displayFields[k].attribute_name)
+					}					 
+				}				
+				newOptionElement.html(dropDownDisplayedValue);				
+				newSelectElement.append(newOptionElement);
+			}			
+			element.innerText = null;
+			$(element).data(directive);
+			$(element).append(newSelectElement);
+			$(newSelectElement).attr("id",directive.data.id);
+			$(newSelectElement).attr("name",directive.data.name);
+			$(newSelectElement).val(directive.data.attributes.id);
+		}
+		
+		function unpack(jsonObject, path){ 			
+ 			var paths = path.split('.');
+ 			var dataItem = jsonObject;
+ 			for(var j=0; j < paths.length; j++){
+ 				var attribute = paths[j];
+ 				dataItem = dataItem[attribute];
+ 				switch($.type(dataItem)){
+ 					case 'undefined':
+ 						return null;
+ 						break;
+ 					case 'object':
+ 						// continue
+ 						break;
+ 					default:
+ 						if ((j+1) == paths.length){
+ 							return dataItem;	
+ 						}else{
+ 							return null;
+ 							break;
+ 						} 						
+ 				}
+ 			}
+ 			return JSON.stringify(dataItem);
+		}		
+		
+	</script>
+		
+	<script type="text/javascript">				
+	    $(document).ready(
+			function() {	    		
+				processNestedEntities();
+				processSimpleText();
+			}
+	    );
+    </script>
+    
+	<body>
+		<form th:attr="action=${formAction}, method=${formMethod}">
+			<input type="hidden" name="crudAction" id="crudAction" th:attr="value=${crudAction}" />
+			<input type="hidden" th:attr="name='id', id='id', value=${dataItem?.get('id')}">
+			<table style="width: 60%;">
+				<tr>
+					<th colspan="2" style="width: 100%;" th:switch="${crudAction}">
+						<span th:case="'DELETE'" th:text="'Confirm Delete Record'"></span>											
+						<span th:case="'UPDATE'" th:text="'Update Existing Record'"></span>
+						<span th:case="'CREATE'" th:text="'Add New Record'"></span>										
+					</th>
+				</tr>
+				
+				<tr th:each="displayConfig: ${displayConfigurations}" th:if="${displayConfig.isDisplayed}">
+					
+					<th style="width:20%" th:text="${displayConfig.labelAs}"></th>
+					
+					<th:block th:switch="${displayConfig.handleAs}">
+						<th:block th:case="'SIMPLE_TEXT'">
+							<th:block th:switch="${displayConfig.fieldName}">
+								<th:block  th:case="'id'">
+									<td style="width:80%" th:attr="handleAs='SIMPLE_TEXT_ID'" th:text="${dataItem?.get(displayConfig.fieldName)}"></td>
+								</th:block>
+								<th:block th:case="*">
+									<td th:attr="handleAs='SIMPLE_TEXT'">
+										<input type="text" th:attr="name=${displayConfig.fieldName}, id=${displayConfig.fieldName}, value=${dataItem?.get(displayConfig.fieldName)}"></input>
+									</td>
+								</th:block>
+							</th:block>
+						</th:block>
+						<th:block th:case="'NESTED_ENTITY'">
+							<td style="width:80%" th:attr="handleAs='NESTED_ENTITY'" th:text="${dataItem?.get(displayConfig.fieldName)}">
+							</td>
+						</th:block>
+					</th:block>
+				</tr>
+								
+				<tr>
+					<td colspan="2">
+						<button type="submit" name="commitAction" id="commitAction" value="OK" >
+							<span th:switch="${crudAction}">
+								<span th:case="'DELETE'" th:text="'Confirm'"></span>											
+								<span th:case="*" th:text="'Save'"></span>							
+							</span>							
+						</button>
+						<button type="button" name="commitCancel" id="commitCancel"  th:attr="onclick='window.location.href=\'' + ${onCancel} + '\''">Cancel</button>
+					</td>
+				</tr> 
+			</table>
+		</form>
+	</body>
+</html>

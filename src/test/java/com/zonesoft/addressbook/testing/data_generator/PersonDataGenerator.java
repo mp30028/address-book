@@ -3,6 +3,7 @@ package com.zonesoft.addressbook.testing.data_generator;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.zonesoft.addressbook.entities.OtherName;
@@ -97,15 +98,24 @@ public class PersonDataGenerator {
 		return ThreadLocalRandom.current().nextLong(min, max);
 	}
 	
-	public static Person generatePerson(boolean hasOtherNames){
+	public static Person generatePerson(int numberOfOtherNames){
 		Person person = new Person();
 		Gender gender = generateGender();
 		person.setPersonId(generateId());
 		person.setFirstname(generateFirstName(gender));
 		person.setLastname(generateLastName());
-		person.setDateOfBirth(generateDateOfBirth());
-		if (hasOtherNames) person.setOtherNames(generateOtherNames(gender));
-		return person;
+		person.setDateOfBirth(generateDateOfBirth());	
+		person.setOtherNames(generateOtherNames(gender, numberOfOtherNames));
+		return person;		
+	}
+	
+	public static Person generatePerson(boolean hasOtherNames){
+		if (hasOtherNames) {
+			int numberOfOtherNames = randomInt(1, 6);
+			return generatePerson(numberOfOtherNames);
+		}else {
+			return generatePerson(0);
+		}
 	}
 	
 	public static int generateOtherNameTypeId() {
@@ -118,8 +128,12 @@ public class PersonDataGenerator {
 	}
 	
 	public static List<OtherName> generateOtherNames(Gender gender){
-		List<OtherName> otherNames = new ArrayList<>();
 		int numberOfOtherNames = randomInt(0, 6);
+		return generateOtherNames(gender, numberOfOtherNames);
+	}
+
+	public static List<OtherName> generateOtherNames(Gender gender, int numberOfOtherNames){
+		List<OtherName> otherNames = new ArrayList<>();
 		for (int j=0; j < numberOfOtherNames; j++) {
 			OtherName otherName = new OtherName();
 			otherName.setOtherNameId(generateId());
@@ -129,6 +143,6 @@ public class PersonDataGenerator {
 		}
 		return otherNames;
 	}
-
-
+	
+	
 }

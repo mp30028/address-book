@@ -77,12 +77,13 @@ class PersonDaoFetchByIdTest {
 	
 	@Test
 	void testFetchById_WHEN_personWithIdIsFound_AND_hasOtherNames_THEN_returnsPersonWithOtherNames() throws SQLException {
-		Person generatedPerson = generatePerson(true);
+		int expectedNumberOfOtherNames = 3;
+		Person generatedPerson = generatePerson(expectedNumberOfOtherNames);
 		when(mockStatement.executeQuery()).thenReturn(mockResultSet);
 		when(mockResultSet.next()).thenReturn(true, false);
 		mockoutResultsetGets(mockResultSet, generatedPerson);
 		when(mockOtherNamesStatement.executeQuery()).thenReturn(mockOtherNamesResultset);
-		when(mockOtherNamesResultset.next()).thenReturn(true);
+		when(mockOtherNamesResultset.next()).thenReturn(true,true,true,false);
 		PersonDao personDao = new PersonDao(mockConnectionManager);
 		assertNotNull(personDao);	
 		Person fetchedPerson = personDao.fetchById(generatedPerson.getPersonId());
@@ -92,5 +93,7 @@ class PersonDaoFetchByIdTest {
 			assertEquals(generatedPerson.getLastname(), fetchedPerson.getLastname());
 			assertEquals(generatedPerson.getDateOfBirth(), fetchedPerson.getDateOfBirth());
 			assertNotNull(fetchedPerson.getOtherNames());
+			assertEquals(generatedPerson.getOtherNames().size(), fetchedPerson.getOtherNames().size());
+			assertEquals(expectedNumberOfOtherNames, fetchedPerson.getOtherNames().size());
 	}
 }

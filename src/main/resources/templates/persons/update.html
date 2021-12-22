@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Persons</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<link rel="stylesheet" type="text/css" href="../static/css/main.css">
+<script src="../static/js/jquery/jquery-3.5.1.js"></script>
+
+<body>
+	<form action="doUpdate" method="post">
+		<input type="hidden" name="updateType" id="updateType" th:attr="value=${updateType}" />
+		<input type="hidden" th:attr="name='personId', id='personId', value=${person.getPersonId()}">	
+	
+	
+		<table style="width: 60%;">
+			<tr>
+				<th>Person ID</th>
+				<td th:attr="text=${person.getPersonId()}"></td>
+			</tr>
+			<tr>
+				<th>Firstname</th>
+				<td>
+					<input type="text" name="firstname" id="firstname"  th:attr="value=${person.getFirstname()}">
+				</td>
+			</tr>
+			<tr>
+				<th>Lastname</th>
+				<td>
+					<input type="text" name="lastname" id="lastname"  th:attr="value=${person.getLastname()}">
+				</td>
+			</tr>
+			<tr>
+				<th>Date of Birth</th>
+				<td>
+					<input type="text" name="dateOfBirth" id="dateOfBirth"  th:attr="value=${person.getDateOfBirth()}">
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>
