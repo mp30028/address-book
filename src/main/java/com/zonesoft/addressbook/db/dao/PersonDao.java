@@ -38,8 +38,10 @@ public class PersonDao {
 			statement.setLong(PARAMETER_INDEX_PERSON_ID_FOR_GET_BY_ID_SQL, personId);
 			ResultSet resultset = statement.executeQuery();
 			if(Objects.nonNull(resultset)) {
-				person = unmarshallResultset(resultset);
-				fetchAndUpdateOtherNames(connection, person);
+				if(resultset.next()) {
+					person = unmarshallResultset(resultset);
+					fetchAndUpdateOtherNames(connection, person);
+				}
 			}
 		} catch (SQLException e) {
 			String message = "SQL Exception trying to execute SQL=" + GET_BY_ID_SQL;

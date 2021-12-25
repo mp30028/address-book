@@ -41,6 +41,5 @@
 		<servlet-name>PersonController</servlet-name>
 		<url-pattern>/ui/person</url-pattern>
 	</servlet-mapping>
-
 	
 </web-app>

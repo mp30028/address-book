@@ -8,19 +8,46 @@
 <script src="../static/js/jquery/jquery-3.5.1.js"></script>
 
 <script>
-	function doOtherNameUdate(){
-		alert("FROM doOtherNameUpdate");
+	var isUpdateOtherNameHidden = false;
+	function showHideUdateOtherName(){
+		showHideUdateOtherNameTimed(500);
+	}
+	
+	function showHideUdateOtherNameTimed(time){
+		if (isUpdateOtherNameHidden){
+			$("#updateOtherName").show(time);
+			isUpdateOtherNameHidden = false;
+		}else{
+			$("#updateOtherName").hide(time);
+			isUpdateOtherNameHidden = true;
+		}
 	}
 
 	$(document).ready(
 			function(){
-				$("[id^=editOtherName_]").click(doOtherNameUdate);
+				$("[id^=editOtherName_]").click(showHideUdateOtherName);
+				showHideUdateOtherNameTimed(0);
 			});
 </script>
 
 
 
 <body>
+	<div id="updateOtherName" class="centeredPanel" style="width:400px">
+		<table>
+			<tr>
+				<th colspan="2">Edit Other Names</th>
+			</tr>
+			<tr>
+				<th>Other Name</th>
+				<td><input type="text" name="updateOtherName" id="updateOtherName"></td>
+			</tr>
+			<tr>
+				<th>Other Name Type</th>
+				<td>????</td>
+			</tr>
+		</table>
+	</div>
 	<form action="person" method="post">
 		<input type="hidden" name="updateType" id="updateType" th:attr="value=${updateType}" />
 		<input type="hidden" th:attr="name='personId', id='personId', value=${person.getPersonId()}">	

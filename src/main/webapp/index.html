@@ -4,9 +4,21 @@
 <meta charset="ISO-8859-1">
 <title>Address Book - Index</title>
 </head>
+
+<script > 
+
+   function doPersonsRequest(){
+		document.getElementById('personsRequestForm').submit();
+   }
+
+</script>
+
 <body>
-	1.
-	<a href="static/html/hello.html">Go to hello page</a>
-	<br />
+	1. <a href="hello">Go to hello page</a><br><br>
+	2. <a href="javascript:doPersonsRequest()">Persons</a> 
+	
+	<form id="personsRequestForm" action="ui/person" method="post">
+		<input type="hidden" name="action" id="action" value="LIST">
+	</form>
 </body>
 </html>
