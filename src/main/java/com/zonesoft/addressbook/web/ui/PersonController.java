@@ -1,4 +1,4 @@
-package com.zonesoft.addressbook.webui;
+package com.zonesoft.addressbook.web.ui;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,19 +15,14 @@ import org.apache.log4j.Logger;
 
 import com.zonesoft.addressbook.services.data.PersonService;
 import com.zonesoft.addressbook.services.rendering.HtmlView;
+import static com.zonesoft.addressbook.constants.ApplicationConstants.*;
 
 
 public class PersonController extends HttpServlet {
 	private static final Logger LOGGER = Logger.getLogger(PersonController.class);
 	private static final long serialVersionUID = 1L;
 	private static final PersonService personService = new PersonService();
-	private static final String ACTION_PARAMTER_NAME = "requestAction";
-	private static final String ACTION_LIST = "LIST";
-	private static final String ACTION_ADD = "ADD";
-	private static final String ACTION_EDIT = "EDIT";
-	private static final String ACTION_DELETE = "DELETE";
-	private static final String ACTION_RETURN_HOME = "HOME";
-	private static final String ACTION_CANCEL = "CANCEL";
+
 	
 	private static final String LIST_TEMPLATE_PATH = "persons/list.html";
 	private static final String UPDATE_TEMPLATE_PATH = "persons/update.html";
@@ -69,7 +64,9 @@ public class PersonController extends HttpServlet {
 
 	private void viewList(HttpServletRequest request, HttpServletResponse response) throws IOException {
     	String html = htmlView.create(LIST_TEMPLATE_PATH, getListModel());
+    	LOGGER.debug("\n---------------- List Html ---------------------------------");
     	LOGGER.debug(html);
+    	LOGGER.debug("------------------------------------------------------------\n");
     	PrintWriter printWriter = response.getWriter();
     	printWriter.append(html);
     	printWriter.close();
@@ -95,6 +92,9 @@ public class PersonController extends HttpServlet {
 		long personId =  Long.parseLong(request.getParameter("personId"));
 		LOGGER.debug("personId = " + personId);
     	String html = htmlView.create(UPDATE_TEMPLATE_PATH, getUpdateModel(personId));
+    	LOGGER.debug("\n---------------- Edit Html ---------------------------------");
+    	LOGGER.debug(html);
+    	LOGGER.debug("------------------------------------------------------------\n");
     	response.getWriter().append(html);		
 	}
 

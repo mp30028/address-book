@@ -9,4 +9,12 @@ public class ApplicationConstants {
 	public static final String DB_DRIVER = "address-book.db.driver";
 	public static final String DB_USERNAME = "address-book.db.username";
 	public static final String DB_PASSWORD = "address-book.db.password";
+	
+	public static final String ACTION_PARAMTER_NAME = "requestAction";
+	public static final String ACTION_LIST = "LIST";
+	public static final String ACTION_ADD = "ADD";
+	public static final String ACTION_EDIT = "EDIT";
+	public static final String ACTION_DELETE = "DELETE";
+	public static final String ACTION_RETURN_HOME = "HOME";
+	public static final String ACTION_CANCEL = "CANCEL";	
 }

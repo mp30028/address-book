@@ -1,4 +1,4 @@
-package com.zonesoft.addressbook.webui;
+package com.zonesoft.addressbook.web.ui;
 
 import java.io.IOException;
 import java.time.LocalDateTime;

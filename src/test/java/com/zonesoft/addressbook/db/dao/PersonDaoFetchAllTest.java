@@ -16,6 +16,10 @@ import org.mockito.Mockito;
 import com.zonesoft.addressbook.db.ConnectionManager;
 import com.zonesoft.addressbook.entities.Person;
 import static com.zonesoft.addressbook.db.sql.PersonSql.*;
+import static com.zonesoft.addressbook.db.sql.OtherNameSql.FIELD_OTHER_NAME;
+import static com.zonesoft.addressbook.db.sql.OtherNameSql.FIELD_OTHER_NAME_ID;
+import static com.zonesoft.addressbook.db.sql.OtherNameSql.FIELD_OTHER_NAME_TYPE;
+import static com.zonesoft.addressbook.db.sql.OtherNameSql.FIELD_OTHER_NAME_TYPE_ID;
 import static com.zonesoft.addressbook.testing.data_generator.PersonDataGenerator.*;
 
 

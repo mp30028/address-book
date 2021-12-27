@@ -1,4 +1,4 @@
-package com.zonesoft.addressbook.webapi;
+package com.zonesoft.addressbook.web.api;
 
 import java.io.IOException;
 import javax.servlet.ServletException;

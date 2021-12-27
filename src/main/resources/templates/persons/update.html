@@ -7,19 +7,6 @@
 <link rel="stylesheet" type="text/css" href="../static/css/main.css">
 <script src="../static/js/jquery/jquery-3.5.1.js"></script>
 
-<script>
-	function doOtherNameUdate(){
-		alert("FROM doOtherNameUpdate");
-	}
-
-	$(document).ready(
-			function(){
-				$("[id^=editOtherName_]").click(doOtherNameUdate);
-			});
-</script>
-
-
-
 <body>
 	<form action="person" method="post">
 		<input type="hidden" name="updateType" id="updateType" th:attr="value=${updateType}" />
@@ -52,15 +39,15 @@
 			<tr>
 				<th>Other Names</th>
 				<td>
-					<table th:if="${person.getOtherNames()}" id="otherNamesTable" class="subtable">
+					<table id="otherNamesTable" class="subtable">
 						<tr th:each="otherName: ${person.getOtherNames()}">
 							<td th:text="${otherName.getValue()}" >other_name</td>
 							<td th:text="${otherName.getNameType().getValue()}" >other_name_type</td>
-							<td>
-								<button type="button" class="ellipsesButton"
-										th:attr="name='editOtherName_'+${otherName.getOtherNameId()}, 
-										         id='editOtherName_'+${otherName.getOtherNameId()}">
-										...
+						</tr>
+						<tr>
+							<td colspan="2" style="border-style: dashed; text-align: right;">
+								<button type="button" class="ellipsesButton" name="manageOtherNames" id="manageOtherNames">
+									. . .
 								</button>
 							</td>
 						</tr>
@@ -68,7 +55,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td colspan="2" style="border-style: none">
+				<td colspan="2" style="border-style: none;">
 					<button type="submit" name="requestAction" id="requestAction" value="SAVE">
 						<span th:switch="${updateType}"> 
 							<span th:case="'DELETE'" th:text="'Confirm'"></span> 
