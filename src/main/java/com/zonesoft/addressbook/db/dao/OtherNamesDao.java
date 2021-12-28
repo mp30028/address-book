@@ -45,9 +45,9 @@ public class OtherNamesDao extends AbstractDao{
 				while(resultset.next()) {
 					if (Objects.isNull(otherNames)) otherNames = new ArrayList<OtherName>();
 					OtherName otherName = new OtherName();
-					otherName.setOtherNameId(resultset.getLong(FIELD_OTHER_NAME_ID));
+					otherName.setId(resultset.getLong(FIELD_OTHER_NAME_ID));
 					otherName.setValue(resultset.getString(FIELD_OTHER_NAME));
-					otherName.setNameType(new OtherNameType(resultset.getLong(FIELD_OTHER_NAME_TYPE_ID), resultset.getString(FIELD_OTHER_NAME_TYPE)));
+					otherName.setOtherNameType(new OtherNameType(resultset.getLong(FIELD_OTHER_NAME_TYPE_ID), resultset.getString(FIELD_OTHER_NAME_TYPE)));
 					otherNames.add(otherName);
 				}
 			}
@@ -68,9 +68,9 @@ public class OtherNamesDao extends AbstractDao{
 			ResultSet resultset = statement.executeQuery();
 			if (Objects.nonNull(resultset)) {
 					otherName = new OtherName();
-					otherName.setOtherNameId(resultset.getLong(FIELD_OTHER_NAME_ID));
+					otherName.setId(resultset.getLong(FIELD_OTHER_NAME_ID));
 					otherName.setValue(resultset.getString(FIELD_OTHER_NAME));
-					otherName.setNameType(new OtherNameType(resultset.getLong(FIELD_OTHER_NAME_TYPE_ID), resultset.getString(FIELD_OTHER_NAME_TYPE)));
+					otherName.setOtherNameType(new OtherNameType(resultset.getLong(FIELD_OTHER_NAME_TYPE_ID), resultset.getString(FIELD_OTHER_NAME_TYPE)));
 			}
 		} catch (SQLException e) {
 			String message = "SQL Exception trying to execute SQL=" + GET_OTHER_NAME_SQL + " with otherNameId =" + otherNameId;

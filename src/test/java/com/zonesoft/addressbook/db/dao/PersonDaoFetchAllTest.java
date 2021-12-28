@@ -60,8 +60,8 @@ class PersonDaoFetchAllTest {
 	private void mockoutResultsetGets(Person generatedPerson1, Person generatedPerson2) throws SQLException {
 		when(mockResultSet.getLong(FIELD_PERSON_ID))
 			.thenReturn(
-					generatedPerson1.getPersonId(), 
-					generatedPerson2.getPersonId()
+					generatedPerson1.getId(), 
+					generatedPerson2.getId()
 		);
 		
 		when(mockResultSet.getString(FIELD_FIRSTNAME)).
@@ -100,7 +100,7 @@ class PersonDaoFetchAllTest {
 		for(int j=0; j < expectedResultsSize; j++) {
 			Person fetchedPerson = fetchedPersons.get(j);
 			Person generatedPerson = allGeneratedPersons.get(j);
-			assertEquals(generatedPerson.getPersonId(), fetchedPerson.getPersonId());
+			assertEquals(generatedPerson.getId(), fetchedPerson.getId());
 			assertEquals(generatedPerson.getFirstname(), fetchedPerson.getFirstname());
 			assertEquals(generatedPerson.getLastname(), fetchedPerson.getLastname());
 			assertEquals(generatedPerson.getDateOfBirth(), fetchedPerson.getDateOfBirth());
@@ -128,7 +128,7 @@ class PersonDaoFetchAllTest {
 		for(int j=0; j < expectedResultsSize; j++) {
 			Person fetchedPerson = fetchedPersons.get(j);
 			Person generatedPerson = allGeneratedPersons.get(j);
-			assertEquals(generatedPerson.getPersonId(), fetchedPerson.getPersonId());
+			assertEquals(generatedPerson.getId(), fetchedPerson.getId());
 			assertEquals(generatedPerson.getFirstname(), fetchedPerson.getFirstname());
 			assertEquals(generatedPerson.getLastname(), fetchedPerson.getLastname());
 			assertEquals(generatedPerson.getDateOfBirth(), fetchedPerson.getDateOfBirth());

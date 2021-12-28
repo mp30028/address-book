@@ -1,4 +1,4 @@
-package com.zonesoft.addressbook.services.rendering;
+package com.zonesoft.addressbook.services.views;
 
 import java.util.Map;
 

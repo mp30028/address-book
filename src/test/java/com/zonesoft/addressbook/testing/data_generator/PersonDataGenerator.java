@@ -101,7 +101,7 @@ public class PersonDataGenerator {
 	public static Person generatePerson(int numberOfOtherNames){
 		Person person = new Person();
 		Gender gender = generateGender();
-		person.setPersonId(generateId());
+		person.setId(generateId());
 		person.setFirstname(generateFirstName(gender));
 		person.setLastname(generateLastName());
 		person.setDateOfBirth(generateDateOfBirth());	
@@ -136,9 +136,9 @@ public class PersonDataGenerator {
 		List<OtherName> otherNames = new ArrayList<>();
 		for (int j=0; j < numberOfOtherNames; j++) {
 			OtherName otherName = new OtherName();
-			otherName.setOtherNameId(generateId());
+			otherName.setId(generateId());
 			otherName.setValue(generateOtherName(gender));
-			otherName.setNameType(generateOtherNameType());
+			otherName.setOtherNameType(generateOtherNameType());
 			otherNames.add(otherName);
 		}
 		return otherNames;

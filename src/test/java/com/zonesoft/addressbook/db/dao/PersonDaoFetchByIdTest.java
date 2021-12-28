@@ -50,7 +50,7 @@ class PersonDaoFetchByIdTest {
 	
 	
 	private void mockoutResultsetGets(ResultSet mockResultSet, Person generatedPerson) throws SQLException {
-		when(mockResultSet.getLong(FIELD_PERSON_ID)).thenReturn(generatedPerson.getPersonId());
+		when(mockResultSet.getLong(FIELD_PERSON_ID)).thenReturn(generatedPerson.getId());
 		when(mockResultSet.getString(FIELD_FIRSTNAME)).thenReturn(generatedPerson.getFirstname());		
 		when(mockResultSet.getString(FIELD_LASTNAME)).thenReturn(generatedPerson.getLastname());		
 		when(mockResultSet.getString(FIELD_DATE_OF_BIRTH)).thenReturn(generatedPerson.getDateOfBirth().toString());			
@@ -66,9 +66,9 @@ class PersonDaoFetchByIdTest {
 		when(mockOtherNamesStatement.executeQuery()).thenReturn(null);			
 		PersonDao personDao = new PersonDao(mockConnectionManager);
 		assertNotNull(personDao);	
-		Person fetchedPerson = personDao.fetchById(generatedPerson.getPersonId());
+		Person fetchedPerson = personDao.fetchById(generatedPerson.getId());
 		assertNotNull(fetchedPerson);
-			assertEquals(generatedPerson.getPersonId(), fetchedPerson.getPersonId());
+			assertEquals(generatedPerson.getId(), fetchedPerson.getId());
 			assertEquals(generatedPerson.getFirstname(), fetchedPerson.getFirstname());
 			assertEquals(generatedPerson.getLastname(), fetchedPerson.getLastname());
 			assertEquals(generatedPerson.getDateOfBirth(), fetchedPerson.getDateOfBirth());
@@ -86,9 +86,9 @@ class PersonDaoFetchByIdTest {
 		when(mockOtherNamesResultset.next()).thenReturn(true,true,true,false);
 		PersonDao personDao = new PersonDao(mockConnectionManager);
 		assertNotNull(personDao);	
-		Person fetchedPerson = personDao.fetchById(generatedPerson.getPersonId());
+		Person fetchedPerson = personDao.fetchById(generatedPerson.getId());
 		assertNotNull(fetchedPerson);
-			assertEquals(generatedPerson.getPersonId(), fetchedPerson.getPersonId());
+			assertEquals(generatedPerson.getId(), fetchedPerson.getId());
 			assertEquals(generatedPerson.getFirstname(), fetchedPerson.getFirstname());
 			assertEquals(generatedPerson.getLastname(), fetchedPerson.getLastname());
 			assertEquals(generatedPerson.getDateOfBirth(), fetchedPerson.getDateOfBirth());

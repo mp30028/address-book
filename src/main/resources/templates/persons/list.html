@@ -18,9 +18,9 @@
 			</thead>
 			<tr th:each="person: ${persons}" >
 				<td>
-					<input type="radio" name="personId" th:attr="id='radio_' + ${person.getPersonId()}, value=${person.getPersonId()}"/>
+					<input type="radio" name="id" th:id="'radio_' + ${person.getId()}" th:value="${person.getId()}"/>
 				</td>
-				<td th:text ="${person.getPersonId()}"></td>
+				<td th:text ="${person.getId()}"></td>
 				<td th:text ="${person.getLastname()}"></td>
 				<td th:text ="${person.getFirstname()}"></td>
 				<td th:text ="${person.getDateOfBirth()}"></td>

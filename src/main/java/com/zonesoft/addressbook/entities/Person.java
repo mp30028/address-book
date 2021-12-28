@@ -11,18 +11,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Person {
 	private static final Logger LOGGER = Logger.getLogger(Person.class);
-	private long personId;
+	private long id;
 	private String firstname;
 	private String lastname;
 	private LocalDate dateOfBirth;
 	private List<OtherName> otherNames;
 
-	public long getPersonId() {
-		return personId;
+	public long getId() {
+		return id;
 	}
 
-	public void setPersonId(long id) {
-		this.personId = id;
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	public String getFirstname() {

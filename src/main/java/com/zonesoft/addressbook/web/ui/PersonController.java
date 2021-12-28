@@ -14,21 +14,25 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import com.zonesoft.addressbook.services.data.PersonService;
-import com.zonesoft.addressbook.services.rendering.HtmlView;
+import com.zonesoft.addressbook.services.views.HtmlView;
+
 import static com.zonesoft.addressbook.constants.ApplicationConstants.*;
 
 
 public class PersonController extends HttpServlet {
 	private static final Logger LOGGER = Logger.getLogger(PersonController.class);
+	
 	private static final long serialVersionUID = 1L;
+	
 	private static final PersonService personService = new PersonService();
+	
 
 	
-	private static final String LIST_TEMPLATE_PATH = "persons/list.html";
-	private static final String UPDATE_TEMPLATE_PATH = "persons/update.html";
-	private static final String HOME_PAGE_PATH = "../index.html";
+	private static final String TEMPLATE_PATH_LIST = "persons/list.html";
+	private static final String TEMPLATE_PATH_UPDATE = "persons/update.html";
+	private static final String PATH_HOME_PAGE = "../index.html";
+	
 	private static final HtmlView htmlView = new HtmlView();
-
     
     @Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -41,84 +45,72 @@ public class PersonController extends HttpServlet {
 		LOGGER.debug("requestedAction = " + requestedAction);
 		switch(requestedAction) {
 			case ACTION_ADD:
-				viewAdd(request, response);
+				showAddView(request, response);
 				break;
 			case ACTION_EDIT:
-				viewEdit(request, response);
+				showEditView(request, response);
 				break;
 			case ACTION_DELETE:
-				viewDelete(request, response);
+				showDeleteView(request, response);
 				break;
 			case ACTION_RETURN_HOME:
-				viewHome(request, response);
+				showHomeView(request, response);
 				break;
 			case ACTION_CANCEL:
 			case ACTION_LIST: 
 			default:
-				viewList(request, response);
+				showListView(request, response);
 		}
 	}
-
     
 
-
-	private void viewList(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    	String html = htmlView.create(LIST_TEMPLATE_PATH, getListModel());
-    	LOGGER.debug("\n---------------- List Html ---------------------------------");
-    	LOGGER.debug(html);
-    	LOGGER.debug("------------------------------------------------------------\n");
+	private void showListView(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    	String html = htmlView.create(TEMPLATE_PATH_LIST, modelForList());
+    	LOGGER.debug("Showing List View");
     	PrintWriter printWriter = response.getWriter();
     	printWriter.append(html);
     	printWriter.close();
 	}
 
 
-
-	private void viewDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private void showDeleteView(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		viewHome(request, response);
+		showHomeView(request, response);
 		
 	}
 
 
-
-	private void viewHome(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.sendRedirect(HOME_PAGE_PATH);
+	private void showHomeView(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.sendRedirect(PATH_HOME_PAGE);
 	}
 
 
-
-	private void viewEdit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		long personId =  Long.parseLong(request.getParameter("personId"));
-		LOGGER.debug("personId = " + personId);
-    	String html = htmlView.create(UPDATE_TEMPLATE_PATH, getUpdateModel(personId));
-    	LOGGER.debug("\n---------------- Edit Html ---------------------------------");
-    	LOGGER.debug(html);
-    	LOGGER.debug("------------------------------------------------------------\n");
+	private void showEditView(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		long personId =  Long.parseLong(request.getParameter("id"));
+    	String html = htmlView.create(TEMPLATE_PATH_UPDATE, modelForUpdate(personId));
+    	LOGGER.debug("Showing Edit View for record with personId=" + personId);
     	response.getWriter().append(html);		
 	}
 
 
-
-
-	private void viewAdd(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private void showAddView(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		viewHome(request, response);
+		showHomeView(request, response);
 		
 	}
 
 	
-	private Map<String, Object> getUpdateModel(long personId) {
+	private Map<String, Object> modelForUpdate(long personId) {
 		Map<String, Object> model = new HashMap<>();
-		model.put("person", personService.fetchById(personId));
+		model.put(MODEL_KEY_PERSON, personService.fetchById(personId));
 		return model;
 	}
 	
-	private Map<String, Object> getListModel(){
+	
+	private Map<String, Object> modelForList(){
 		Map<String, Object> model = new HashMap<>();
-		model.put("persons", personService.fetchAll());
+		model.put(MODEL_KEY_PERSONS, personService.fetchAll());
 		return model;
 	}
 
-	
 }

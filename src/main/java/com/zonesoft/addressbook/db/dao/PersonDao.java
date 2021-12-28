@@ -94,7 +94,7 @@ public class PersonDao extends AbstractDao {
 	}
 	
 	private void fetchAndUpdateOtherNames(Connection connection, Person person) throws SQLException {
-		List<OtherName> otherNames = otherNamesDao.fetchByPersonId(connection, person.getPersonId());
+		List<OtherName> otherNames = otherNamesDao.fetchByPersonId(connection, person.getId());
 		if (Objects.nonNull(otherNames)) {
 			for (OtherName otherName : otherNames) {
 				otherName.setPerson(person);
@@ -105,7 +105,7 @@ public class PersonDao extends AbstractDao {
 		
 	private Person unmarshallResultset(ResultSet resultset) throws SQLException {
 		Person person = new Person();
-		person.setPersonId(resultset.getLong(FIELD_PERSON_ID));
+		person.setId(resultset.getLong(FIELD_PERSON_ID));
 		person.setFirstname(resultset.getString(FIELD_FIRSTNAME));
 		person.setLastname(resultset.getString(FIELD_LASTNAME));
 		person.setDateOfBirth(convertToLocalDate(resultset.getString(FIELD_DATE_OF_BIRTH)));

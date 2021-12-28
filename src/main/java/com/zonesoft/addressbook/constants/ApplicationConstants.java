@@ -16,5 +16,10 @@ public class ApplicationConstants {
 	public static final String ACTION_EDIT = "EDIT";
 	public static final String ACTION_DELETE = "DELETE";
 	public static final String ACTION_RETURN_HOME = "HOME";
-	public static final String ACTION_CANCEL = "CANCEL";	
+	public static final String ACTION_CANCEL = "CANCEL";
+//	public static final String ACTION_OTHER_NAMES = "OTHER_NAMES";
+	
+	public static final String MODEL_KEY_PERSONS = "persons";
+	public static final String MODEL_KEY_PERSON = "person";
+//	public static final String MODEL_KEY_OTHER_NAMES = "otherNames";
 }

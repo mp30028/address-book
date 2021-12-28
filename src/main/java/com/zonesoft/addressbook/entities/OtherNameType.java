@@ -1,7 +1,7 @@
 package com.zonesoft.addressbook.entities;
 
 public class OtherNameType {
-	private long otherNameTypeId;
+	private long id;
 	private String value;
 
 	public OtherNameType() {
@@ -10,16 +10,16 @@ public class OtherNameType {
 	
 	public OtherNameType(long id, String value) {
 		super();
-		this.otherNameTypeId = id;
+		this.id = id;
 		this.value = value;
 	}
 	
-	public long getOtherNameTypeId() {
-		return this.otherNameTypeId;
+	public long getId() {
+		return this.id;
 	}
 
-	public void setOtherNameTypeId(long otherNameTypeId) {
-		this.otherNameTypeId = otherNameTypeId;
+	public void setId(long otherNameTypeId) {
+		this.id = otherNameTypeId;
 	}
 
 	public String getValue() {

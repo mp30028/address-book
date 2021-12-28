@@ -10,13 +10,13 @@
 <body>
 	<form action="person" method="post">
 		<input type="hidden" name="updateType" id="updateType" th:attr="value=${updateType}" />
-		<input type="hidden" th:attr="name='personId', id='personId', value=${person.getPersonId()}">	
+		<input type="hidden" th:attr="name='id', id='id', value=${person.getId()}">	
 	
 	
 		<table style="width: 60%;">
 			<tr>
-				<th>Person ID</th>
-				<td th:attr="text=${person.getPersonId()}"></td>
+				<th class="id">Person ID</th>
+				<td th:text="${person.getId()}"></td>
 			</tr>
 			<tr>
 				<th>Firstname</th>
@@ -38,24 +38,38 @@
 			</tr>
 			<tr>
 				<th>Other Names</th>
-				<td>
-					<table id="otherNamesTable" class="subtable">
-						<tr th:each="otherName: ${person.getOtherNames()}">
-							<td th:text="${otherName.getValue()}" >other_name</td>
-							<td th:text="${otherName.getNameType().getValue()}" >other_name_type</td>
-						</tr>
-						<tr>
-							<td colspan="2" style="border-style: dashed; text-align: right;">
-								<button type="button" class="ellipsesButton" name="manageOtherNames" id="manageOtherNames">
-									. . .
+				<td class="subtableContainer">
+					<table id="otherNamesTable" class="subtable">					
+						<tr th:each="otherName: ${person.getOtherNames()}" >
+							<td>
+								<input type="hidden" name="otherNameId"  th:id="'otherNameId_' + ${otherName.getId()}" th:value="${otherName.getId()}"/>
+								<input type="text" name="otherNameValue" th:id="'otherNameValue_' + ${otherName.getId()}" th:value="${otherName.getValue()}"/>
+							</td>
+							
+							<td>
+								<input type="hidden" name="otherNameTypeId"  th:id="'otherNameTypeId_' + ${otherName.getOtherNameType.getId()}" th:value="${otherName.getOtherNameType.getId()}"/>
+								<input type="text" name="otherNameTypeValue" th:id="'otherNameTypeValue_' + ${otherName.getOtherNameType.getId()}" th:value="${otherName.getOtherNameType.getValue()}"/>
+							</td>
+								
+							<td  style="text-align: right;">
+								<button type="button" class="deleteButton" name="deleteOtherName" id="deleteOtherName">
+									Delete
 								</button>
 							</td>
+						</tr>
+						<tr>
+							<td colspan="3" style="text-align: right;">
+								<button type="button" class="addNewButton" name="addNewOtherNameButton" id="addNewOtherNameButton">
+									Add New
+								</button>
+							</td>
+
 						</tr>
 					</table>
 				</td>
 			</tr>
 			<tr>
-				<td colspan="2" style="border-style: none;">
+				<td colspan="2">
 					<button type="submit" name="requestAction" id="requestAction" value="SAVE">
 						<span th:switch="${updateType}"> 
 							<span th:case="'DELETE'" th:text="'Confirm'"></span> 
