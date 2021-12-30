@@ -11,10 +11,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import com.zonesoft.addressbook.db.ConnectionManager;
+import com.zonesoft.addressbook.db.dao.sql.other_names.FetchByPersonId;
+import com.zonesoft.addressbook.db.dao.sql.person.FetchAll;
+import com.zonesoft.addressbook.db.dao.sql.person.FetchById;
 import com.zonesoft.addressbook.entities.Person;
-import static com.zonesoft.addressbook.db.sql.PersonSql.*;
-import static com.zonesoft.addressbook.testing.data_generator.PersonDataGenerator.*;
 
+import static com.zonesoft.addressbook.testing.data_generator.PersonDataGenerator.*;
 
 class PersonDaoFetchByIdTest {
 	
@@ -35,8 +37,8 @@ class PersonDaoFetchByIdTest {
 		assertNotNull(mockOtherNamesStatement);
 		assertNotNull(mockOtherNamesResultset);
 		when(mockConnectionManager.getConnection()).thenReturn(mockConnection);
-		when(mockConnection.prepareStatement(GET_BY_ID_SQL)).thenReturn(mockStatement);
-		when(mockConnection.prepareStatement(GET_OTHER_NAMES_SQL)).thenReturn(mockOtherNamesStatement);
+		when(mockConnection.prepareStatement(FetchById.SQL)).thenReturn(mockStatement);
+		when(mockConnection.prepareStatement(FetchByPersonId.SQL)).thenReturn(mockOtherNamesStatement);
 	}
 	
 	@Test
@@ -50,10 +52,10 @@ class PersonDaoFetchByIdTest {
 	
 	
 	private void mockoutResultsetGets(ResultSet mockResultSet, Person generatedPerson) throws SQLException {
-		when(mockResultSet.getLong(FIELD_PERSON_ID)).thenReturn(generatedPerson.getId());
-		when(mockResultSet.getString(FIELD_FIRSTNAME)).thenReturn(generatedPerson.getFirstname());		
-		when(mockResultSet.getString(FIELD_LASTNAME)).thenReturn(generatedPerson.getLastname());		
-		when(mockResultSet.getString(FIELD_DATE_OF_BIRTH)).thenReturn(generatedPerson.getDateOfBirth().toString());			
+		when(mockResultSet.getLong(FetchAll.FIELDS.PERSON_ID)).thenReturn(generatedPerson.getId());
+		when(mockResultSet.getString(FetchAll.FIELDS.FIRSTNAME)).thenReturn(generatedPerson.getFirstname());		
+		when(mockResultSet.getString(FetchAll.FIELDS.LASTNAME)).thenReturn(generatedPerson.getLastname());		
+		when(mockResultSet.getString(FetchAll.FIELDS.DATE_OF_BIRTH)).thenReturn(generatedPerson.getDateOfBirth().toString());			
 	}
 
 	

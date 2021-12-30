@@ -40,5 +40,10 @@ public class OtherName {
 	public void setOtherNameType(OtherNameType nameType) {
 		this.nameType = nameType;
 	}
+
+	public String toJsonString() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }

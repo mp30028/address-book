@@ -2,7 +2,9 @@ package com.zonesoft.addressbook.web.ui;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -13,10 +15,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
+import com.zonesoft.addressbook.entities.OtherName;
+import com.zonesoft.addressbook.entities.OtherNameType;
+import com.zonesoft.addressbook.entities.Person;
 import com.zonesoft.addressbook.services.data.PersonService;
 import com.zonesoft.addressbook.services.views.HtmlView;
 
 import static com.zonesoft.addressbook.constants.ApplicationConstants.*;
+import static com.zonesoft.addressbook.utils.Utils.*;
 
 
 public class PersonController extends HttpServlet {
@@ -56,6 +62,8 @@ public class PersonController extends HttpServlet {
 			case ACTION_RETURN_HOME:
 				showHomeView(request, response);
 				break;
+			case ACTION_SAVE:
+				doSave(request);
 			case ACTION_CANCEL:
 			case ACTION_LIST: 
 			default:
@@ -63,6 +71,48 @@ public class PersonController extends HttpServlet {
 		}
 	}
     
+
+	private void doSave(HttpServletRequest request) {
+		LOGGER.debug(requestParametersToString(request));
+		Person person = unpackPerson(request);
+		personService.update(person);
+	}
+	
+	private Person unpackPerson(HttpServletRequest request) {
+		Person person = new Person();
+		person.setId(Long.parseLong(request.getParameter("id")));
+		person.setFirstname(request.getParameter("firstname"));
+		person.setLastname(request.getParameter("lastname"));
+		person.setDateOfBirth(convertStringToLocalDate(request.getParameter("dateOfBirth")));
+		person.setOtherNames(unpackPersonOtherNames(request, person));
+		return person;
+	}
+	
+	
+	private List<OtherName> unpackPersonOtherNames(HttpServletRequest request, Person person){
+		String[] otherNameIds = request.getParameterValues("otherNameId");
+		String[] otherNameValues = request.getParameterValues("otherNameValue");
+		String[] otherNameTypeIds = request.getParameterValues("otherNameTypeId");
+		String[] otherNameTypeValues = request.getParameterValues("otherNameTypeValue");
+		List<OtherName> otherNames = null;
+		if (otherNameIds.length > 0) otherNames = new ArrayList<OtherName>();
+		for(int j=0; j < otherNameIds.length; j++) {
+			long otherNameId = Long.parseLong(otherNameIds[j]);
+			String otherNameValue = otherNameValues[j];
+			long otherNameTypeId = Long.parseLong(otherNameTypeIds[j]);
+			String otherNameTypeValue = otherNameTypeValues[j];
+			OtherName otherName = new OtherName();
+			otherName.setId(otherNameId);
+			otherName.setValue(otherNameValue);
+			OtherNameType otherNameType = new OtherNameType();
+			otherName.setPerson(person);
+			otherNameType.setId(otherNameTypeId);
+			otherNameType.setValue(otherNameTypeValue);
+			otherName.setOtherNameType(otherNameType);
+			otherNames.add(otherName);
+		}
+		return otherNames;
+	}
 
 	private void showListView(HttpServletRequest request, HttpServletResponse response) throws IOException {
     	String html = htmlView.create(TEMPLATE_PATH_LIST, modelForList());

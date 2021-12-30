@@ -14,12 +14,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import com.zonesoft.addressbook.db.ConnectionManager;
+import com.zonesoft.addressbook.db.dao.sql.other_names.FetchByPersonId;
+import com.zonesoft.addressbook.db.dao.sql.person.FetchAll;
 import com.zonesoft.addressbook.entities.Person;
-import static com.zonesoft.addressbook.db.sql.PersonSql.*;
-import static com.zonesoft.addressbook.db.sql.OtherNameSql.FIELD_OTHER_NAME;
-import static com.zonesoft.addressbook.db.sql.OtherNameSql.FIELD_OTHER_NAME_ID;
-import static com.zonesoft.addressbook.db.sql.OtherNameSql.FIELD_OTHER_NAME_TYPE;
-import static com.zonesoft.addressbook.db.sql.OtherNameSql.FIELD_OTHER_NAME_TYPE_ID;
 import static com.zonesoft.addressbook.testing.data_generator.PersonDataGenerator.*;
 
 
@@ -46,8 +43,8 @@ class PersonDaoFetchAllTest {
 		when(mockConnection.createStatement()).thenReturn(mockStatement);
 		personDao = new PersonDao(mockConnectionManager);
 		assertNotNull(personDao);
-		when(mockStatement.executeQuery(GET_ALL_SQL)).thenReturn(mockResultSet);
-		when(mockConnection.prepareStatement(GET_OTHER_NAMES_SQL)).thenReturn(mockOtherNamesStatement);
+		when(mockStatement.executeQuery(FetchAll.SQL)).thenReturn(mockResultSet);
+		when(mockConnection.prepareStatement(FetchByPersonId.SQL)).thenReturn(mockOtherNamesStatement);
 		when(mockOtherNamesStatement.executeQuery()).thenReturn(mockOtherNamesResultset);	
 	}
 	
@@ -58,25 +55,25 @@ class PersonDaoFetchAllTest {
 	}
 
 	private void mockoutResultsetGets(Person generatedPerson1, Person generatedPerson2) throws SQLException {
-		when(mockResultSet.getLong(FIELD_PERSON_ID))
+		when(mockResultSet.getLong(FetchAll.FIELDS.PERSON_ID))
 			.thenReturn(
 					generatedPerson1.getId(), 
 					generatedPerson2.getId()
 		);
 		
-		when(mockResultSet.getString(FIELD_FIRSTNAME)).
+		when(mockResultSet.getString(FetchAll.FIELDS.FIRSTNAME)).
 			thenReturn(
 					generatedPerson1.getFirstname(), 
 					generatedPerson2.getFirstname()
 		);
 		
-		when(mockResultSet.getString(FIELD_LASTNAME)).
+		when(mockResultSet.getString(FetchAll.FIELDS.LASTNAME)).
 			thenReturn(
 					generatedPerson1.getLastname(), 
 					generatedPerson2.getLastname()
 		);
 		
-		when(mockResultSet.getString(FIELD_DATE_OF_BIRTH)).
+		when(mockResultSet.getString(FetchAll.FIELDS.DATE_OF_BIRTH)).
 			thenReturn(
 					generatedPerson1.getDateOfBirth().toString(), 
 					generatedPerson2.getDateOfBirth().toString()
@@ -118,10 +115,10 @@ class PersonDaoFetchAllTest {
 		List<Person> allGeneratedPersons = new ArrayList<Person>() {{add(generatedPerson1);add(generatedPerson2);}};
 		when(mockResultSet.next()).thenReturn(true,true,false);
 		when(mockOtherNamesResultset.next()).thenReturn(true,true,false,true,false);
-		when(mockOtherNamesResultset.getLong(FIELD_OTHER_NAME_ID)).thenReturn(generateId());
-		when(mockOtherNamesResultset.getString(FIELD_OTHER_NAME)).thenReturn(generateOtherName(generateGender()));
-		when(mockOtherNamesResultset.getLong(FIELD_OTHER_NAME_TYPE_ID)).thenReturn((long) generateOtherNameTypeId());
-		when(mockOtherNamesResultset.getString(FIELD_OTHER_NAME_TYPE)).thenReturn(generateOtherNameType().toString());
+		when(mockOtherNamesResultset.getLong(FetchByPersonId.FIELDS.OTHER_NAME_ID)).thenReturn(generateId());
+		when(mockOtherNamesResultset.getString(FetchByPersonId.FIELDS.OTHER_NAME)).thenReturn(generateOtherName(generateGender()));
+		when(mockOtherNamesResultset.getLong(FetchByPersonId.FIELDS.OTHER_NAME_TYPE_ID)).thenReturn((long) generateOtherNameTypeId());
+		when(mockOtherNamesResultset.getString(FetchByPersonId.FIELDS.OTHER_NAME_TYPE)).thenReturn(generateOtherNameType().toString());
 		List<Person> fetchedPersons = personDao.fetchAll();
 		assertNotNull(fetchedPersons);
 		assertEquals(expectedResultsSize, fetchedPersons.size());

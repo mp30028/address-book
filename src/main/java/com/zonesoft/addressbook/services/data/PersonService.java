@@ -28,4 +28,9 @@ public class PersonService {
 	public Person fetchById(long id) {
 		return personDao.fetchById(id);
 	}
+
+	public Person update(Person person) {
+		personDao.update(person);
+		return person;	
+	}
 }
