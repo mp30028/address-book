@@ -3,5 +3,63 @@
  "http://java.sun.com/dtd/web-app_2_3.dtd" >
 
 <web-app>
-	<display-name>Archetype Created Web Application</display-name>
+	<display-name>Address Book App</display-name>
+	
+	<servlet>
+		<servlet-name>GreetingsController</servlet-name>
+		<display-name>Greetings</display-name>
+		<description></description>
+		<servlet-class>com.zonesoft.addressbook.web.ui.GreetingController</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>PersonApi</servlet-name>
+		<display-name>PersonApi</display-name>
+		<description></description>
+		<servlet-class>com.zonesoft.addressbook.web.api.PersonApi</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>OtherNameTypeApi</servlet-name>
+		<display-name>OtherNameTypeApi</display-name>
+		<description></description>
+		<servlet-class>com.zonesoft.addressbook.web.api.OtherNameTypeApi</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>OtherNamesController</servlet-name>
+		<display-name>OtherNamesController</display-name>
+		<description></description>
+		<servlet-class>com.zonesoft.addressbook.web.ui.OtherNamesController</servlet-class>
+	</servlet>
+	
+	<servlet>
+		<servlet-name>PersonController</servlet-name>
+		<display-name>PersonController</display-name>
+		<description></description>
+		<servlet-class>com.zonesoft.addressbook.web.ui.PersonController</servlet-class>
+	</servlet>
+	
+	
+		
+	<servlet-mapping>
+		<servlet-name>GreetingsController</servlet-name>
+		<url-pattern>/hello</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>PersonApi</servlet-name>
+		<url-pattern>/api/person</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>PersonController</servlet-name>
+		<url-pattern>/ui/person</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>OtherNameTypeApi</servlet-name>
+		<url-pattern>/api/other-name-types</url-pattern>
+	</servlet-mapping>
+	
 </web-app>

@@ -1,0 +1,108 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Test CSS</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<link rel="stylesheet" type="text/css" href="../css/main.css">
+<script type="text/javascript" src="../js/jquery/jquery-3.5.1.js"></script>
+
+<script type="text/javascript">
+
+	var otherNameTypes = null;
+
+	function initialise(){
+		$.getJSON("../../api/other-name-types", function(fetchedData){otherNameTypes = fetchedData;});
+	}
+
+	$(document).ready( initialise );
+	
+	function loadOtherNameTypes(selector){
+		if (!selector.isloaded){
+			$.each(otherNameTypes, function(n, otherName) {
+				selector.append(new Option(otherName.value, otherName.id))
+			});
+			selector.isloaded = true;
+		}
+	}
+</script>
+
+<body>
+	<form action="person" method="post">
+		<input type="hidden" name="updateType" id="updateType" />
+		<input type="hidden" name="personId" id="personId" value="3"> 
+		
+		
+		<br/>
+		<br/>
+		<label for="otherNameTypeSelector">Select Name-Type </label>
+		<select name="otherNameTypeSelector" id="otherNameTypeSelector" onclick="loadOtherNameTypes(this)" isloaded=false>
+			<option value="-1"></option>
+		</select>
+		
+		<br/>
+		<br/>
+
+
+		<table style="width: 60%;">
+			<tr>
+				<th>Person ID</th>
+				<td text="3"></td>
+			</tr>
+			<tr>
+				<th>Firstname</th>
+				<td>
+					<input type="text" name="firstname" id="firstname" value="Chris">
+				</td>
+			</tr>
+			<tr>
+				<th>Lastname</th>
+				<td>
+					<input type="text" name="lastname" id="lastname" value="Watson">
+				</td>
+			</tr>
+			<tr>
+				<th>Date of Birth</th>
+				<td>
+					<input type="text" name="dateOfBirth" id="dateOfBirth" value="1867-04-09">
+				</td>
+			</tr>
+			<tr>
+				<th>Other Names</th>
+				<td>
+					<table id="otherNamesTable" class="subtable">
+						<tr>
+							<td>Johan</td>
+							<td>Firstname at birth</td>
+						</tr>
+						<tr>
+							<td>Tanck</td>
+							<td>Lastname at birth</td>
+						</tr>
+						<tr >
+							<td>Cristian</td>
+							<td>Middle Name at birth</td>
+						</tr>
+						<tr>
+							<td>Christian</td>
+							<td>Middle Name</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" style="border-style: none">
+					<button type="submit" name="requestAction" id="requestAction" value="SAVE">
+						<span> 
+							 
+							<span>Save</span>
+						</span>
+					</button>
+					<button type="submit" name="requestAction" id="requestCancel" value="CANCEL">Cancel</button>
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

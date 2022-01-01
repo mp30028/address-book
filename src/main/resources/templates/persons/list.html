@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Persons</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<link rel="stylesheet" type="text/css" href="../static/css/main.css">
+<body>
+	<form action="person" method="post">
+		<table style="width: 60%;">
+			<thead>
+				<tr>
+					<th colspan="2">Person ID</th>
+					<th>Lastname</th>
+					<th>Firstname</th>
+					<th>Birth-Date</th>
+				</tr>
+			</thead>
+			<tr th:each="person: ${persons}" >
+				<td>
+					<input type="radio" name="id" th:id="'radio_' + ${person.getId()}" th:value="${person.getId()}"/>
+				</td>
+				<td th:text ="${person.getId()}"></td>
+				<td th:text ="${person.getLastname()}"></td>
+				<td th:text ="${person.getFirstname()}"></td>
+				<td th:text ="${person.getDateOfBirth()}"></td>
+			</tr>
+			<tr>
+				<td colspan="4">
+					<button type="submit" name="requestAction" id="requestActionAdd" value="ADD" >Add</button>
+					<button type="submit" name="requestAction" id="requestActionEdit" value="EDIT">Edit</button>
+					<button type="submit" name="requestAction" id="requestActionDelete" value="DELETE">Delete</button>
+					<button type="submit" name="requestAction" id="requestActionHome" value="HOME">Home</button>
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>
