@@ -104,32 +104,40 @@ public class PersonDao extends AbstractDao {
 	}
 
 	private void addNewOtherNames(Connection connection, Person person) {
-		for(OtherName personsOtherName: person.getOtherNames()) {
-			if (personsOtherName.getId() <= 0) {
-				otherNamesDao.add(connection, personsOtherName);
+		if (Objects.nonNull(person.getOtherNames())) {
+			for(OtherName personsOtherName: person.getOtherNames()) {
+				if (personsOtherName.getId() <= 0) {
+					otherNamesDao.add(connection, personsOtherName);
+				}
 			}
 		}
 	}
 
 	private void updateChangedOtherNames(Connection connection, Person person) {
-		for(OtherName personsOtherName: person.getOtherNames()) {
-			otherNamesDao.update(connection, personsOtherName);
+		if (Objects.nonNull(person.getOtherNames())) {
+			for(OtherName personsOtherName: person.getOtherNames()) {
+				otherNamesDao.update(connection, personsOtherName);
+			}
 		}
 	}
 
 	private void deleteRemovedOtherNames(Connection connection, Person person) {
 		List<OtherName> fetchedOtherNames = otherNamesDao.fetchByPersonId(connection, person.getId());
-		for(OtherName fetchedOtherName: fetchedOtherNames) {
-			if (! inPersonsOtherNames(fetchedOtherName, person)) {
-				otherNamesDao.delete(connection, fetchedOtherName.getId());
+		if (Objects.nonNull(fetchedOtherNames)) {
+			for(OtherName fetchedOtherName: fetchedOtherNames) {
+				if (! inPersonsOtherNames(fetchedOtherName, person)) {
+					otherNamesDao.delete(connection, fetchedOtherName.getId());
+				}
 			}
 		}
 	}
 	
 	private boolean inPersonsOtherNames(OtherName otherName, Person person) {
-		for(OtherName personsOtherName: person.getOtherNames()) {
-			if (personsOtherName.getId() == otherName.getId()) {
-				return true;
+		if (Objects.nonNull(person.getOtherNames())) {
+			for(OtherName personsOtherName: person.getOtherNames()) {
+				if (personsOtherName.getId() == otherName.getId()) {
+					return true;
+				}
 			}
 		}
 		return false;

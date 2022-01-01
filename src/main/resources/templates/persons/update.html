@@ -45,18 +45,45 @@
 		$("#" + idOfRowToDelete).remove();
 	}
 	
+	
+	// id otherNameRow_TEMPLATE
+	// name & id otherNameId_TEMPLATE
+	// name & id otherNameValue_TEMPLATE
+	// name otherNameTypeId_TEMPLATE
+	// id otherNameType_TEMPLATE
+	// id otherNameDeleteButton_TEMPLATE
+	const suffix = '_TEMPLATE';
+	var newSuffix = '';
 	function doOtherNameAddNew(){
-		var rowToClone = $('#otherNameRow_NEW_');
-		var newRow = $(rowToClone).clone();
-		var newRowId = "otherNameRow_NEW_" + Date.now().toString();
-		$(newRow).css("display","");
-		$(newRow).insertBefore($(rowToClone));
-		console.log('id of cloned row = ' + $(newRow).attr('id'));
-		$(newRow).attr('id', newRowId);
-		console.log('id of cloned row after update = ' + $(newRow).attr('id'));
-		console.log('id of row that was cloned = ' + $(rowToClone).attr('id'));		
 		
+		
+		var rowToClone = $('#otherNameRow' + suffix);
+		var newRow = $(rowToClone).clone();
+		newSuffix = '_NEW_' + Date.now().toString();
+		var newRowId = 'otherNameRow' + newSuffix;
+		$(newRow).insertBefore($(rowToClone));
+			console.log('id of cloned row = ' + $(newRow).attr('id'));
+		$(newRow).attr('id', newRowId);
+			console.log('id of cloned row after update = ' + $(newRow).attr('id'));
+			console.log('id of row that was cloned = ' + $(rowToClone).attr('id'));		
+		$(newRow).css("display","");
+		var newRowChildIds = $(newRow).find('[id$="' + suffix + '"]');
+			console.log('newRowChildIds.length = ',newRowChildIds.length) ;
+		var newRowChildNames = $(newRow).find('[name$="' + suffix + '"]');
+			console.log('newRowChildNames.length = ', newRowChildNames.length);
+		$(newRowChildIds).attr('id', newId);
+		$(newRowChildNames).attr('name', newName);
+		$('#otherNameId' + newSuffix).attr('value', '-1');
 	}
+	
+	function newId(m, currentId){
+		return currentId.replace(suffix, newSuffix);
+	}
+	
+	function newName(m, currentName){
+		return currentName.replace(suffix, '');
+	}
+	
 </script>
 
 <body>
@@ -120,22 +147,22 @@
 						</tr>
 						
 						
-						<tr id="otherNameRow_NEW_" style="display: none;" >
+						<tr id="otherNameRow_TEMPLATE" style="display: none;" >
 							<td>
-								<input type="hidden" name="otherNameId_NEW"  id="otherNameId_NEW_" value=""/>
-								<input type="text" name="otherNameValue_NEW" id="otherNameValue_NEW_" value=""/>
+								<input type="hidden" name="otherNameId_TEMPLATE"  id="otherNameId_TEMPLATE" value=""/>
+								<input type="text" name="otherNameValue_TEMPLATE" id="otherNameValue_TEMPLATE" value=""/>
 							</td>
 							
 							<td>
-								<select name="otherNameTypeId_NEW"
-										id="otherNameType_NEW_"
+								<select name="otherNameTypeId_TEMPLATE"
+										id="otherNameType_TEMPLATE"
 								>
 									<option value="-1"></option>
 								</select>
 							</td>
 								
 							<td class="buttonCell" >
-								<button type="button" name="otherNameDeleteButton" id="otherNameDeleteButton_NEW_" class="deleteButton" onclick="doOtherNameDelete(this)" ></button>
+								<button type="button" name="otherNameDeleteButton" id="otherNameDeleteButton_TEMPLATE" class="deleteButton" onclick="doOtherNameDelete(this)" ></button>
 							</td>
 						</tr>
 						<tr id="addNewOtherNameRow">
