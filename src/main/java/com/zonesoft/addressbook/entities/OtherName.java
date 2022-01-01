@@ -1,8 +1,13 @@
 package com.zonesoft.addressbook.entities;
 
+import org.apache.log4j.Logger;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class OtherName {
+	private static final Logger LOGGER = Logger.getLogger(OtherName.class);
 	private long id;
 	private String value;
 	private Person person;
@@ -41,9 +46,20 @@ public class OtherName {
 		this.nameType = nameType;
 	}
 
+	@JsonIgnore
 	public String toJsonString() {
-		// TODO Auto-generated method stub
-		return null;
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.findAndRegisterModules();
+		String json = null;
+		try {
+			json = objectMapper.writeValueAsString(this);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			String message = "<EXCEPTION - whilst writing OtherName Object to JSON. " + e.getLocalizedMessage() + ">" ;
+			LOGGER.error(message);
+			return message;
+		}
+		return json;
 	}
 	
 }
