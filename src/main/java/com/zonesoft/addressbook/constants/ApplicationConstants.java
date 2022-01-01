@@ -21,5 +21,4 @@ public class ApplicationConstants {
 	
 	public static final String MODEL_KEY_PERSONS = "persons";
 	public static final String MODEL_KEY_PERSON = "person";
-//	public static final String MODEL_KEY_OTHER_NAMES = "otherNames";
 }
