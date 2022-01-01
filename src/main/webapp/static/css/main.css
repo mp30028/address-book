@@ -77,6 +77,47 @@ table.subtable td{
 
 .ellipsesButton {font-weight: 600;}
 
+table.subtable td.buttonCell{
+	border-style: dashed;
+	text-align: center;
+}
+
+td.buttonCell button.deleteButton{
+	background-image: url(../icons/delete.svg);
+	background-size: cover;
+	background-color: white;
+	height: 20px;
+	width: 50px;
+	border: none;
+}
+
+td.buttonCell button.deleteButton:hover{
+	background-image: url(../icons/delete_onhover.svg);
+	background-size: cover;
+	background-color: #d2d2d2;
+	height: 20px;
+	width: 50px;
+	border: none;
+}
+
+td.buttonCell button.addNewButton{
+	background-image: url(../icons/addnew.svg);
+	background-size: cover;
+	background-color: white;
+	height: 30px;
+	width: 50px;
+	border: none;
+}
+
+td.buttonCell button.addNewButton:hover{
+	background-image: url(../icons/addnew_onhover.svg);
+	background-size: cover;
+	background-color: silver;
+	height: 30px;
+	width: 50px;
+	border: none;
+}
+
 .centeredPanel{
   color: white;
   background: rgb(255, 255, 255);

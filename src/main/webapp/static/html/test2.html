@@ -1,0 +1,55 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Test Adding Rows to a table</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<link rel="stylesheet" type="text/css" href="../css/main.css">
+<script type="text/javascript" src="../js/jquery/jquery-3.5.1.js"></script>
+
+<script type="text/javascript">
+	function doAddNewRow(clickedButton){
+		console.log('id of clicked button = ' + clickedButton.id);
+// 		var rowToClone = $(clickedButton).closest('tr').prev();
+		var rowToClone = $('#rowTemplate');
+		var newRow = $(rowToClone).clone();
+		$(newRow).css("display","");
+		$(newRow).insertBefore($(rowToClone));
+		console.log('id of cloned row = ' + $(newRow).attr('id'));
+		$(newRow).attr('id', 'rowDelta');
+		console.log('id of cloned row after update = ' + $(newRow).attr('id'));
+		console.log('id of row that was cloned = ' + $(rowToClone).attr('id'));
+	}
+</script>
+
+<body>
+		<table>
+			<tr id="rowAlpha">
+				<td id="cellAlpha_1">Row: Alpha, Column: One</td>
+				<td id="cellAlpha_2">Row: Alpha, Column: Two</td>
+				<td id="cellAlpha_3">Row: Alpha, Column: Three</td>
+			</tr>
+			<tr id="rowBeta">
+				<td id="cellBeta_1">Row: Beta, Column: One</td>
+				<td id="cellBeta_2">Row: Beta, Column: Two</td>
+				<td id="cellBeta_3">Row: Beta, Column: Three</td>
+			</tr>
+			<tr id="rowGamma">
+				<td id="cellGamma_1">Row: Gamma, Column: One</td>
+				<td id="cellGamma_2">Row: Gamma, Column: Two</td>
+				<td id="cellGamma_3">Row: Gamma, Column: Three</td>
+			</tr>
+			<tr id="rowTemplate" style="display: none;">
+				<td id="cellTemplate_1">Row: Template, Column: One</td>
+				<td id="cellTemplate_2">Row: Template, Column: Two</td>
+				<td id="cellTemplate_3">Row: Template, Column: Three</td>
+			</tr>			
+			<tr>
+				<td colspan="3">
+					<button id="newRowButton" onclick="doAddNewRow(this)">Add New Row</button>
+				</td>
+			</tr>			
+		</table>
+</body>
+</html>

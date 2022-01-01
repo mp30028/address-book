@@ -90,7 +90,7 @@ public class OtherNamesDao extends AbstractDao{
 	public void delete(Connection connection, long id) {
 		try {
 			PreparedStatement statement = connection.prepareStatement(Delete.SQL);
-			statement.setLong(Update.PARAMETERS.OTHER_NAME_ID, id);
+			statement.setLong(Delete.PARAMETERS.OTHER_NAME_ID, id);
 			int recordsAffected = statement.executeUpdate();
 			if (recordsAffected != 1) LOGGER.warn("Delete of OtherName record resulted in affecting more than one record. OtherName.id=" + id );
 		} catch (SQLException e) {

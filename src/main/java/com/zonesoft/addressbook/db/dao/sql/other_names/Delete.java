@@ -8,9 +8,8 @@ public class Delete {
 	
 	public static final String SQL =
 									"DELETE "
-									+ 	" a.*"
 									+ " FROM"
-									+ 	" t_other_name a"
+									+ 	" t_other_name"
 									+ " WHERE"
-									+  	" a.other_name_id = ?";
+									+  	" other_name_id = ?";
 }

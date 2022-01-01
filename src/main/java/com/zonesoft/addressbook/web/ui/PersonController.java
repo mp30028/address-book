@@ -93,21 +93,21 @@ public class PersonController extends HttpServlet {
 		String[] otherNameIds = request.getParameterValues("otherNameId");
 		String[] otherNameValues = request.getParameterValues("otherNameValue");
 		String[] otherNameTypeIds = request.getParameterValues("otherNameTypeId");
-		String[] otherNameTypeValues = request.getParameterValues("otherNameTypeValue");
+//		String[] otherNameTypeValues = request.getParameterValues("otherNameTypeValue");
 		List<OtherName> otherNames = null;
 		if (otherNameIds.length > 0) otherNames = new ArrayList<OtherName>();
 		for(int j=0; j < otherNameIds.length; j++) {
 			long otherNameId = Long.parseLong(otherNameIds[j]);
 			String otherNameValue = otherNameValues[j];
 			long otherNameTypeId = Long.parseLong(otherNameTypeIds[j]);
-			String otherNameTypeValue = otherNameTypeValues[j];
+//			String otherNameTypeValue = otherNameTypeValues[j];
 			OtherName otherName = new OtherName();
 			otherName.setId(otherNameId);
 			otherName.setValue(otherNameValue);
 			OtherNameType otherNameType = new OtherNameType();
 			otherName.setPerson(person);
 			otherNameType.setId(otherNameTypeId);
-			otherNameType.setValue(otherNameTypeValue);
+//			otherNameType.setValue(otherNameTypeValue);
 			otherName.setOtherNameType(otherNameType);
 			otherNames.add(otherName);
 		}

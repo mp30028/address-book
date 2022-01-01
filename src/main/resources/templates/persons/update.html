@@ -7,6 +7,58 @@
 <link rel="stylesheet" type="text/css" href="../static/css/main.css">
 <script src="../static/js/jquery/jquery-3.5.1.js"></script>
 
+<script type="text/javascript">
+
+	var fetchedOtherNameTypes = null;
+	
+	function updateOtherNameTypeSelector(m, selector){
+		$.each(fetchedOtherNameTypes, function(n, otherNameType) {
+			var newOptionElement = new Option(otherNameType.value, otherNameType.id)
+			var selectedId = parseInt(selector.getAttribute("selectedId"));
+			if (otherNameType.id == selectedId ){
+				newOptionElement.selected = true;
+			}else{				
+				newOptionElement.selected = false;
+			}
+			selector.append(newOptionElement);
+		});
+	}
+	
+	function updateAllOtherNameTypeSelectors(fetchedData){
+		const prefix = "otherNameType_";
+		fetchedOtherNameTypes = fetchedData;
+		$.each($('[id^="' + prefix + '"]'),updateOtherNameTypeSelector);
+	}
+	
+	function fetchAndUpdateOtherNameTypes(){
+		$.getJSON("../api/other-name-types", updateAllOtherNameTypeSelectors);
+	}
+
+	$(document).ready( fetchAndUpdateOtherNameTypes );
+	
+</script>
+<script type="text/javascript">
+	function doOtherNameDelete(clickedButton){
+		const buttonPrefix = 'otherNameDeleteButton_';
+		const rowPrefix = 'otherNameRow_';
+		var idOfRowToDelete = rowPrefix + clickedButton.id.substring(buttonPrefix.length);
+		$("#" + idOfRowToDelete).remove();
+	}
+	
+	function doOtherNameAddNew(){
+		var rowToClone = $('#otherNameRow_NEW_');
+		var newRow = $(rowToClone).clone();
+		var newRowId = "otherNameRow_NEW_" + Date.now().toString();
+		$(newRow).css("display","");
+		$(newRow).insertBefore($(rowToClone));
+		console.log('id of cloned row = ' + $(newRow).attr('id'));
+		$(newRow).attr('id', newRowId);
+		console.log('id of cloned row after update = ' + $(newRow).attr('id'));
+		console.log('id of row that was cloned = ' + $(rowToClone).attr('id'));		
+		
+	}
+</script>
+
 <body>
 	<form action="person" method="post">
 		<input type="hidden" name="updateType" id="updateType" th:attr="value=${updateType}" />
@@ -39,29 +91,56 @@
 			<tr>
 				<th>Other Names</th>
 				<td class="subtableContainer">
-					<table id="otherNamesTable" class="subtable">					
-						<tr th:each="otherName: ${person.getOtherNames()}" >
+					<table id="otherNamesTable" class="subtable">
+						<thead>
+							<tr>
+								<th>Other-Name</th>
+								<th>Name-Type</th>
+								<th></th>
+							</tr>
+						</thead>				
+						<tr th:each="otherName: ${person.getOtherNames()}" th:id="'otherNameRow_' + ${otherName.getId()}"  >
 							<td>
 								<input type="hidden" name="otherNameId"  th:id="'otherNameId_' + ${otherName.getId()}" th:value="${otherName.getId()}"/>
 								<input type="text" name="otherNameValue" th:id="'otherNameValue_' + ${otherName.getId()}" th:value="${otherName.getValue()}"/>
 							</td>
 							
 							<td>
-								<input type="hidden" name="otherNameTypeId"  th:id="'otherNameTypeId_' + ${otherName.getOtherNameType.getId()}" th:value="${otherName.getOtherNameType.getId()}"/>
-								<input type="text" name="otherNameTypeValue" th:id="'otherNameTypeValue_' + ${otherName.getOtherNameType.getId()}" th:value="${otherName.getOtherNameType.getValue()}"/>
+								<select name="otherNameTypeId"
+										th:id="'otherNameType_' + ${otherName.getOtherNameType.getId()}"
+										th:attr="selectedId=${otherName.getOtherNameType.getId()}"
+								>
+									<option value="-1"></option>
+								</select>
 							</td>
 								
-							<td  style="text-align: right;">
-								<button type="button" class="deleteButton" name="deleteOtherName" id="deleteOtherName">
-									Delete
-								</button>
+							<td class="buttonCell" >
+								<button type="button" name="otherNameDeleteButton" th:id="'otherNameDeleteButton_' + ${otherName.getId()}" class="deleteButton" onclick="doOtherNameDelete(this)" ></button>
 							</td>
 						</tr>
-						<tr>
-							<td colspan="3" style="text-align: right;">
-								<button type="button" class="addNewButton" name="addNewOtherNameButton" id="addNewOtherNameButton">
-									Add New
-								</button>
+						
+						
+						<tr id="otherNameRow_NEW_" style="display: none;" >
+							<td>
+								<input type="hidden" name="otherNameId_NEW"  id="otherNameId_NEW_" value=""/>
+								<input type="text" name="otherNameValue_NEW" id="otherNameValue_NEW_" value=""/>
+							</td>
+							
+							<td>
+								<select name="otherNameTypeId_NEW"
+										id="otherNameType_NEW_"
+								>
+									<option value="-1"></option>
+								</select>
+							</td>
+								
+							<td class="buttonCell" >
+								<button type="button" name="otherNameDeleteButton" id="otherNameDeleteButton_NEW_" class="deleteButton" onclick="doOtherNameDelete(this)" ></button>
+							</td>
+						</tr>
+						<tr id="addNewOtherNameRow">
+							<td colspan="3" style="text-align: right;" class="buttonCell">
+								<button type="button" name="addNewOtherName" id="addNewOtherName"  class="addNewButton" onclick="doOtherNameAddNew(this)"></button>
 							</td>
 
 						</tr>

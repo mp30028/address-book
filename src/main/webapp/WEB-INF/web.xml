@@ -20,6 +20,13 @@
 	</servlet>
 
 	<servlet>
+		<servlet-name>OtherNameTypeApi</servlet-name>
+		<display-name>OtherNameTypeApi</display-name>
+		<description></description>
+		<servlet-class>com.zonesoft.addressbook.web.api.OtherNameTypeApi</servlet-class>
+	</servlet>
+
+	<servlet>
 		<servlet-name>OtherNamesController</servlet-name>
 		<display-name>OtherNamesController</display-name>
 		<description></description>
@@ -51,8 +58,8 @@
 	</servlet-mapping>
 	
 	<servlet-mapping>
-		<servlet-name>OtherNamesController</servlet-name>
-		<url-pattern>/ui/OtherNames</url-pattern>
+		<servlet-name>OtherNameTypeApi</servlet-name>
+		<url-pattern>/api/other-name-types</url-pattern>
 	</servlet-mapping>
 	
 </web-app>

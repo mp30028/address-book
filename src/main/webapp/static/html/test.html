@@ -6,14 +6,45 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <link rel="stylesheet" type="text/css" href="../css/main.css">
+<script type="text/javascript" src="../js/jquery/jquery-3.5.1.js"></script>
 
+<script type="text/javascript">
+
+	var otherNameTypes = null;
+
+	function initialise(){
+		$.getJSON("../../api/other-name-types", function(fetchedData){otherNameTypes = fetchedData;});
+	}
+
+	$(document).ready( initialise );
+	
+	function loadOtherNameTypes(selector){
+		if (!selector.isloaded){
+			$.each(otherNameTypes, function(n, otherName) {
+				selector.append(new Option(otherName.value, otherName.id))
+			});
+			selector.isloaded = true;
+		}
+	}
+</script>
 
 <body>
 	<form action="person" method="post">
 		<input type="hidden" name="updateType" id="updateType" />
-		<input type="hidden" name="personId" id="personId" value="3">	
-	
-	
+		<input type="hidden" name="personId" id="personId" value="3"> 
+		
+		
+		<br/>
+		<br/>
+		<label for="otherNameTypeSelector">Select Name-Type </label>
+		<select name="otherNameTypeSelector" id="otherNameTypeSelector" onclick="loadOtherNameTypes(this)" isloaded=false>
+			<option value="-1"></option>
+		</select>
+		
+		<br/>
+		<br/>
+
+
 		<table style="width: 60%;">
 			<tr>
 				<th>Person ID</th>
