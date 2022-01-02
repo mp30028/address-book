@@ -12,6 +12,8 @@ import java.util.Objects;
 import org.apache.log4j.Logger;
 
 import com.zonesoft.addressbook.db.ConnectionManager;
+import com.zonesoft.addressbook.db.dao.sql.person.Add;
+import com.zonesoft.addressbook.db.dao.sql.person.Delete;
 import com.zonesoft.addressbook.db.dao.sql.person.FetchAll;
 import com.zonesoft.addressbook.db.dao.sql.person.FetchById;
 import com.zonesoft.addressbook.db.dao.sql.person.Update;
@@ -132,6 +134,10 @@ public class PersonDao extends AbstractDao {
 		}
 	}
 	
+	private void deletePersonsAllOtherNames(Connection connection, long personId) {
+		otherNamesDao.deleteByPersonId(connection, personId);
+	}
+	
 	private boolean inPersonsOtherNames(OtherName otherName, Person person) {
 		if (Objects.nonNull(person.getOtherNames())) {
 			for(OtherName personsOtherName: person.getOtherNames()) {
@@ -144,18 +150,51 @@ public class PersonDao extends AbstractDao {
 	}
 
 	public Person add(Person person) {
-		// TODO 
-		return null;
+		Connection connection = getCheckedConnection();
+		try {
+			PreparedStatement statement = connection.prepareStatement(Add.SQL, Statement.RETURN_GENERATED_KEYS);
+			statement.setString(Add.PARAMETERS.FIRSTNAME, person.getFirstname());
+			statement.setString(Add.PARAMETERS.LASTNAME, person.getLastname());
+			statement.setString(Add.PARAMETERS.BIRTH_DATE, convertLocalDateToString(person.getDateOfBirth()));
+			int recordsAffected = statement.executeUpdate();
+			if (recordsAffected != 1) LOGGER.warn("Adding of Person record resulted in affecting more than one record. Person =  \n " + person.toJsonString() + "\n");
+			ResultSet generatedKeys =  statement.getGeneratedKeys();
+			if(generatedKeys.next()) {
+				long newPersonId = generatedKeys.getLong(1);
+				person.setId(newPersonId);
+			}else {
+				LOGGER.warn("An unexpected condition occurred during adding new Person record as no generated key was returned. Person =  \n " + person.toJsonString() + "\n");
+			}
+			if(generatedKeys.next()) LOGGER.warn("An unexpected condition occurred during adding new Person record as more than one generated key was returned. Person =  \n " + person.toJsonString() + "\n");
+			addNewOtherNames(connection,person);
+		} catch (SQLException e) {
+			String message = "SQL Exception trying to execute SQL=" + Add.SQL + "\nPerson = " + person.toJsonString() + "\n";
+			LOGGER.error(message);
+			throw new AddressBookException(message, e);
+		} finally {
+			cleanUpAndCloseConnection(connection);
+		}
+		return person;
 	}
 	
 	public Person delete(Person person) {
-		// TODO 
-		return null;
+		Connection connection = getCheckedConnection();
+		this.deletePersonsAllOtherNames(connection, person.getId());
+		this.delete(connection, person.getId());
+		return person;
 	}
 	
-	public Person deleteById(long id) {
-		// TODO 
-		return null;
+	public void delete(Connection connection, long personId) {
+		try {
+			PreparedStatement statement = connection.prepareStatement(Delete.SQL);
+			statement.setLong(Delete.PARAMETERS.PERSON_ID, personId);
+			int recordsAffected = statement.executeUpdate();
+			if (recordsAffected != 1) LOGGER.warn("Deleting Person resulted in affecting more than one record where PersonId =  " + personId);
+		} catch (SQLException e) {
+			String message = "SQL Exception trying to execute SQL=" + Delete.SQL + " with PersonId =  " + personId;
+			LOGGER.error(message);
+			throw new AddressBookException(message, e);
+		}
 	}
 	
 	private void fetchAndUnpackOtherNames(Connection connection, Person person) throws SQLException {

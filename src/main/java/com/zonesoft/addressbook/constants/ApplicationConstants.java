@@ -19,6 +19,10 @@ public class ApplicationConstants {
 	public static final String ACTION_CANCEL = "CANCEL";
 	public static final String ACTION_SAVE = "SAVE";
 	
-	public static final String MODEL_KEY_PERSONS = "persons";
-	public static final String MODEL_KEY_PERSON = "person";
+	public static final String KEY_All_PERSONS = "persons";
+	public static final String KEY_PERSON = "person";
+	public static final String KEY_CRUD_TYPE = "crudType";
+	public static final String KEY_IS_READ_ONLY = "isReadOnly";
+	
+	
 }
