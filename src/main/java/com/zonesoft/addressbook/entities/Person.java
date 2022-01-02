@@ -2,7 +2,6 @@ package com.zonesoft.addressbook.entities;
 
 import java.time.LocalDate;
 import java.util.List;
-
 import org.apache.log4j.Logger;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;

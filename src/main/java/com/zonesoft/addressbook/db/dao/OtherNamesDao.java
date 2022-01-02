@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 import com.zonesoft.addressbook.db.ConnectionManager;
 import com.zonesoft.addressbook.db.dao.sql.other_names.Add;
 import com.zonesoft.addressbook.db.dao.sql.other_names.Delete;
+import com.zonesoft.addressbook.db.dao.sql.other_names.DeleteByPersonId;
 import com.zonesoft.addressbook.db.dao.sql.other_names.FetchById;
 import com.zonesoft.addressbook.db.dao.sql.other_names.FetchByPersonId;
 import com.zonesoft.addressbook.db.dao.sql.other_names.Update;
@@ -130,5 +131,20 @@ public class OtherNamesDao extends AbstractDao{
 			LOGGER.error(message);
 			throw new AddressBookException(message, e);
 		}
+	}
+
+
+	public void deleteByPersonId(Connection connection, long personId) {
+		try {
+			PreparedStatement statement = connection.prepareStatement(DeleteByPersonId.SQL);
+			statement.setLong(DeleteByPersonId.PARAMETERS.PERSON_ID, personId);
+			int recordsAffected = statement.executeUpdate();
+			if (recordsAffected != 1) LOGGER.warn("Deleting OtherNames for person resulted in affecting more than one record. PersonId =  " + personId);
+		} catch (SQLException e) {
+			String message = "SQL Exception trying to execute SQL=" + DeleteByPersonId.SQL + " with PersonId =  " + personId;
+			LOGGER.error(message);
+			throw new AddressBookException(message, e);
+		}
+		
 	}
 }

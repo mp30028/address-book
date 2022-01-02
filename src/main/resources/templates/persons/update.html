@@ -45,13 +45,7 @@
 		$("#" + idOfRowToDelete).remove();
 	}
 	
-	
-	// id otherNameRow_TEMPLATE
-	// name & id otherNameId_TEMPLATE
-	// name & id otherNameValue_TEMPLATE
-	// name otherNameTypeId_TEMPLATE
-	// id otherNameType_TEMPLATE
-	// id otherNameDeleteButton_TEMPLATE
+
 	const suffix = '_TEMPLATE';
 	var newSuffix = '';
 	function doOtherNameAddNew(){
@@ -87,8 +81,9 @@
 </script>
 
 <body>
-	<form action="person" method="post">
-		<input type="hidden" name="updateType" id="updateType" th:attr="value=${updateType}" />
+
+	<form action="person" method="post">		
+		<input type="hidden" name="crudType" id="crudType" th:attr="value=${crudType}" />
 		<input type="hidden" th:attr="name='id', id='id', value=${person.getId()}">	
 	
 	
@@ -100,19 +95,19 @@
 			<tr>
 				<th>Firstname</th>
 				<td>
-					<input type="text" name="firstname" id="firstname"  th:attr="value=${person.getFirstname()}">
+					<input type="text" name="firstname" id="firstname"  th:attr="value=${person.getFirstname()}" th:readonly="${isReadOnly}">
 				</td>
 			</tr>
 			<tr>
 				<th>Lastname</th>
 				<td>
-					<input type="text" name="lastname" id="lastname"  th:attr="value=${person.getLastname()}">
+					<input type="text" name="lastname" id="lastname"  th:attr="value=${person.getLastname()}" th:readonly="${isReadOnly}">
 				</td>
 			</tr>
 			<tr>
 				<th>Date of Birth</th>
 				<td>
-					<input type="text" name="dateOfBirth" id="dateOfBirth"  th:attr="value=${person.getDateOfBirth()}">
+					<input type="text" name="dateOfBirth" id="dateOfBirth"  th:attr="value=${person.getDateOfBirth()}" th:readonly="${isReadOnly}">
 				</td>
 			</tr>
 			<tr>
@@ -129,19 +124,20 @@
 						<tr th:each="otherName: ${person.getOtherNames()}" th:id="'otherNameRow_' + ${otherName.getId()}"  >
 							<td>
 								<input type="hidden" name="otherNameId"  th:id="'otherNameId_' + ${otherName.getId()}" th:value="${otherName.getId()}"/>
-								<input type="text" name="otherNameValue" th:id="'otherNameValue_' + ${otherName.getId()}" th:value="${otherName.getValue()}"/>
+								<input type="text" name="otherNameValue" th:id="'otherNameValue_' + ${otherName.getId()}" th:value="${otherName.getValue()}" th:readonly="${isReadOnly}"/>
 							</td>
 							
 							<td>
 								<select name="otherNameTypeId"
 										th:id="'otherNameType_' + ${otherName.getOtherNameType.getId()}"
 										th:attr="selectedId=${otherName.getOtherNameType.getId()}"
+										th:disabled="${isReadOnly}"
 								>
 									<option value="-1"></option>
 								</select>
 							</td>
 								
-							<td class="buttonCell" >
+							<td class="buttonCell" th:if="${isReadOnly} == false">
 								<button type="button" name="otherNameDeleteButton" th:id="'otherNameDeleteButton_' + ${otherName.getId()}" class="deleteButton" onclick="doOtherNameDelete(this)" ></button>
 							</td>
 						</tr>
@@ -166,7 +162,7 @@
 							</td>
 						</tr>
 						<tr id="addNewOtherNameRow">
-							<td colspan="3" style="text-align: right;" class="buttonCell">
+							<td colspan="3" style="text-align: right;" class="buttonCell" th:if="${isReadOnly} == false">
 								<button type="button" name="addNewOtherName" id="addNewOtherName"  class="addNewButton" onclick="doOtherNameAddNew(this)"></button>
 							</td>
 
@@ -186,6 +182,7 @@
 				</td>
 			</tr>
 		</table>
+	
 	</form>
 </body>
 </html>

@@ -33,4 +33,12 @@ public class PersonService {
 		personDao.update(person);
 		return person;	
 	}
+
+	public void delete(Person person) {
+		personDao.delete(person);
+	}
+
+	public void add(Person person) {
+		personDao.add(person);	
+	}
 }
