@@ -12,4 +12,4 @@ run:
 #  path: pwd
   path: /bin/sh
   args: ["/task-scripts/ci/task_show_uname.sh"]
-#    args: ["./task-scripts/task_show_uname.sh"]
+#    args: ["./task-scripts/show_uname.sh"]
