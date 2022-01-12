@@ -10,4 +10,5 @@ inputs:
 
 run:
   path: /bin/sh
-  args: ["./task-scripts/task_show_uname.sh"]
+  args: ["./task_show_uname.sh"]
+#  args: ["./task-scripts/task_show_uname.sh"]
