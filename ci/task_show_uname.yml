@@ -9,6 +9,7 @@ image_resource:
 #  - name: task-scripts
 
 run:
-  path: /bin/sh
-  args: ["./ci/task_show_uname.sh"]
+    path: pwd
+#  path: /bin/sh
+#  args: ["./ci/task_show_uname.sh"]
 #  args: ["./task-scripts/task_show_uname.sh"]
