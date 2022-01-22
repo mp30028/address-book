@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.util.Enumeration;
 import java.util.Objects;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 public class Utils {
 	
@@ -50,7 +50,6 @@ public class Utils {
 	
 	public static String requestParametersToString(HttpServletRequest request) {
 		StringBuffer sb = new StringBuffer();		
-		@SuppressWarnings("unchecked")
 		Enumeration<String> parameterNames = request.getParameterNames();
 		sb.append("\n");
 		while(parameterNames.hasMoreElements()){
