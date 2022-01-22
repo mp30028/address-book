@@ -31,6 +31,10 @@ public class ApplicationProperties {
 		try {
 			input = openPropertiesFile(filename);
 			properties.load(input);
+			properties.setProperty(DB_HOST, ifDefinedAsEnvVar(DB_HOST,properties.getProperty(DB_HOST)));
+			properties.setProperty(DB_PORT, ifDefinedAsEnvVar(DB_PORT,properties.getProperty(DB_PORT)));
+			properties.setProperty(DB_SCHEMA, ifDefinedAsEnvVar(DB_SCHEMA,properties.getProperty(DB_SCHEMA)));
+			properties.setProperty(DB_DRIVER, ifDefinedAsEnvVar(DB_DRIVER,properties.getProperty(DB_DRIVER)));
 			LOGGER.info(DB_HOST + " = " + properties.getProperty(DB_HOST));
 			LOGGER.info(DB_PORT + " = " + properties.getProperty(DB_PORT));
 			LOGGER.info(DB_SCHEMA + " = " + properties.getProperty(DB_SCHEMA));
@@ -50,6 +54,22 @@ public class ApplicationProperties {
 			}
 		}
 	}
+	
+	
+	
+    public String ifDefinedAsEnvVar(String environmentVariableName , String currentValue) {
+    	String environmentVariableValue = System.getenv(environmentVariableName);
+    	if (Objects.isNull(environmentVariableValue)) {
+    		LOGGER.debug("Env-Var " + environmentVariableName + " is null");
+    		return currentValue;
+    	}else if (environmentVariableValue.isBlank()) {
+    		LOGGER.debug("Env-Var " + environmentVariableName + " is blank");
+    		return currentValue;
+    	}else {
+    		LOGGER.debug("Env-Var " + environmentVariableName + " = " + environmentVariableValue);
+    		return environmentVariableValue;
+    	}
+    }
 
 	private InputStream openPropertiesFile(String propertiesFilename) {
 		InputStream inputStream = ApplicationProperties.class.getClassLoader().getResourceAsStream(propertiesFilename);
